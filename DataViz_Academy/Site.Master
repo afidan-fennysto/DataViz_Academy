@@ -55,7 +55,6 @@
 
     <form id="form1" runat="server">
         <header>
-            <h1>DataViz Academy</h1>
         </header>
 
         <nav class="navbar">
