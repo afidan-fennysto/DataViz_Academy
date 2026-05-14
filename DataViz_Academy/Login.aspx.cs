@@ -24,7 +24,7 @@ namespace DataViz_Academy
             string username = txtUname.Text.Trim();
             string password = txtPassword.Text.Trim();
 
-            string connstr = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
+            string connstr = ConfigurationManager.ConnectionStrings["DataViz"].ConnectionString;
 
             string query = "SELECT COUNT(*) FROM Students WHERE email=@email AND password=@password";
 

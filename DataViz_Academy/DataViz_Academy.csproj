@@ -68,6 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="App_Data\DataViz.mdf" />
+    <Content Include="App_Data\DataViz_log.ldf">
+      <DependentUpon>DataViz.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\Test.mdf" />
     <Content Include="App_Data\Test_log.ldf">
       <DependentUpon>Test.mdf</DependentUpon>
