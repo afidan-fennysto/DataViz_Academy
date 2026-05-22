@@ -68,13 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
-    <Content Include="App_Data\DataViz.mdf" />
-    <Content Include="App_Data\DataViz_log.ldf">
-      <DependentUpon>DataViz.mdf</DependentUpon>
-    </Content>
-    <Content Include="App_Data\Test.mdf" />
-    <Content Include="App_Data\Test_log.ldf">
-      <DependentUpon>Test.mdf</DependentUpon>
+    <Content Include="App_Data\dataviz_database.mdf" />
+    <Content Include="App_Data\dataviz_database_log.ldf">
+      <DependentUpon>dataviz_database.mdf</DependentUpon>
     </Content>
     <Content Include="Assessment.aspx" />
     <Content Include="Forum.aspx" />
@@ -99,6 +95,7 @@
     <Compile Include="Assessment.aspx.designer.cs">
       <DependentUpon>Assessment.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DataViz_SQLnCRUD.cs" />
     <Compile Include="Forum.aspx.cs">
       <DependentUpon>Forum.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
