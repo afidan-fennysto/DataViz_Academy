@@ -1,83 +1,72 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="DataViz_Academy.Site" %>
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head runat="server">
-    <title></title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2c3e50;
-            padding: 15px 40px;
-        }
-
-        .logo {
-            color: white;
-            font-size: 22px;
-            font-weight: bold;
-        }   
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-        }   
-
-        .nav-links li {
-            margin-left: 25px;
-        }   
-
-        .nav-links a {
-            text-decoration: none;
-            color: white;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #1abc9c;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataViz Academy - Interactive Learning Portal</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
-
 <body>
-
     <form id="form1" runat="server">
-        <header>
-        </header>
 
-        <nav class="navbar">
-        <div class="logo">DataViz Academy</div>
+        <div style="display: flex; width: 100%; min-height: 100vh; margin:0; padding:0;">
             
+            <aside>
+                <div class="sidebar-brand">DataViz Academy</div>
+                <div id="roleIndicator" class="role-indicator <%= Session["Role"] != null ? "role-" + Session["Role"].ToString().ToLower() : "role-guest" %>">
+                        <%= Session["Role"] != null ? Session["Role"].ToString() + " Account" : "Guest Account" %>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="Home.aspx">Home Workspace</a></li>
+                        <li><a href="Profile.aspx">My Profile Dashboard</a></li>
+                        <li><a href="Assessment.aspx">Interactive Course Modules</a></li>
+                        <li><a href="Forum.aspx">Community Hub Forum</a></li>
+                        <li><a href="Resources.aspx">External Documentation</a></li>
+                        <li><a href="About.aspx">About Project Initiatives</a></li>
+                    </ul>
+                </nav>
+            </aside>
 
-            <ul class="nav-links">
-                <li><a href="Home.aspx">Home</a></li>
-                <li><a href="Resources.aspx">Resources</a></li>
-                <li><a href="Forum.aspx">Forum</a></li>
-                <li><a href="Assessment.aspx">Assessment</a></li>
-                <li><a href="Auth.aspx">Login</a></li>
-                <li><a href="About.aspx">About</a></li>
-            </ul>
-        </nav>
+            <main style="margin-left: 260px; padding: 40px; width: calc(100% - 260px); background: var(--primary-bg); flex-grow: 1;">
+                
+                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>
 
-        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-        </asp:ContentPlaceHolder>
+                <div id="forumCreatorModal" class="modal-overlay">
+                    <div class="modal-box" style="max-width: 550px;">
+                        <div class="modal-header">Start a Community Thread</div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                            Publish visualization guidelines or ask coding queries to active students.
+                        </p>
+                        
+                        <div id="newPostFormWrapper">
+                            <div class="form-group">
+                                <asp:TextBox ID="txtForumTopic" runat="server" CssClass="form-control" placeholder="Post Title"></asp:TextBox>
+                            </div>
+                            <div class="form-group">
+                                <asp:TextBox ID="txtForumContent" runat="server" TextMode="MultiLine" Rows="4" CssClass="form-control" placeholder="Thoughts on alignment palettes..."></asp:TextBox>
+                            </div>
+                            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                                <button type="button" class="btn btn-outline" style="width: auto; margin:0;" onclick="closeForumModal()">Cancel</button>
+                                <asp:Button ID="btnSubmitPost" runat="server" Text="Publish Thread" CssClass="btn btn-primary" style="width: auto; margin:0;" OnClick="btnSubmitPost_Click" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <footer>
-            Copyright 2026 - DataViz Academy
-        </footer>
-    </form>
+            </main>
+
+        </div>
+
+    </form> <%-- This safely closes form1 at the very end of your active controls --%>
+
+    <script src="script.js"></script>
 </body>
-
 </html>

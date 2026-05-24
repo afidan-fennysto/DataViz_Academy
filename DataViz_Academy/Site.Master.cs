@@ -9,9 +9,51 @@ namespace DataViz_Academy
 {
     public partial class Site : System.Web.UI.MasterPage
     {
+        private DatabaseHandler db = new DatabaseHandler();
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
         }
+
+        protected void btnSubmitPost_Click(object sender, EventArgs e)
+        {
+            // Security verification: verify the user session exists before processing data
+            if (Session["studentid"] == null)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Anonymous posts blocked. Please authenticate.');", true);
+                return;
+            }
+
+            int currentUserId = Convert.ToInt32(Session["studentid"]);
+            string topicText = txtForumTopic.Text.Trim();
+            string contentText = txtForumContent.Text.Trim();
+
+            // CALL THE HANDLER FUNCTION: Inserts record cleanly into ForumPost database table
+            bool isSaved = db.CreateForumPost(currentUserId, topicText, contentText);
+
+            if (isSaved)
+            {
+                // Clear out input values on success
+                txtForumTopic.Text = "";
+                txtForumContent.Text = "";
+
+                // Refresh the current page view to display the new post record instantly
+                Response.Redirect(Request.RawUrl);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Failed to register transaction database sync.');", true);
+            }
+        }
+
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            // Abandon the current runtime state, clear session attributes, and return to auth gateway
+            Session.Clear();
+            Session.Abandon();
+            Response.Redirect("Auth.aspx");
+        }
+
     }
 }

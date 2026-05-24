@@ -1,61 +1,62 @@
 ﻿<%@ Page Title="Auth" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Auth.aspx.cs" Inherits="DataViz_Academy.Login" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="auth-container">
-        <asp:MultiView ID="AuthMultiView" runat="server" ActiveViewIndex="0">
-
-            <asp:View ID="ViewLogin" runat="server">
-
-                <div class="login-box">
-                    <h2 style="text-align:center">
-                        Login to DataViz Academy</h2>
-                    <br />
-                    <br />
-                    Username: 
-                    <asp:TextBox ID="txtLoginUsername" runat="server" Placeholder="Username"></asp:TextBox>
-                    <br />
-                    <br />
-                    Password:
-                    <asp:TextBox ID="txtLoginPassword" runat="server" TextMode="Password" Placeholder="Password"></asp:TextBox>
-                    <br />
-                    <br />
-                    <asp:Button ID="btnLogin" runat="server" Text="Log In" OnClick="btnLogin_Click" />
-                    <br />
-                    <br />
-                    <asp:LinkButton ID="lnkGoToRegister" runat="server" OnClick="lnkGoToRegister_Click">Don't have an account? Register here</asp:LinkButton>
-                </div>
+    <div id="loginView" class="app-view active-view">
+            <h1>Portal Gateway Authentication</h1>
+            <p class="view-subtitle">Sign entry credentials or register an APU student account handle.</p>
+            <div style="max-width: 480px; margin: 0 auto;">
                 
-            </asp:View>
+                <div class="card" id="loginCard">
+                    <h3 style="margin-bottom: 8px;">Sign In</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Provide your registration profile identity parameters.</p>
+                    
+                    
+                        <div class="form-group">
+                            <label>Full Corporate Account Name</label>
+                            <asp:TextBox ID="loginName" runat="server" CssClass="form-control" placeholder="e.g. Raif" required="required"></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label>APU Email Address</label>
+                            <asp:TextBox ID="loginEmail" runat="server" TextMode="Email" CssClass="form-control" placeholder="example@apu.edu.my" required="required"></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <asp:TextBox ID="loginPass" runat="server" TextMode="Password" CssClass="form-control" required="required"></asp:TextBox>
+                        </div>
 
-            <asp:View ID="ViewRegister" runat="server">
-                <div class="register-box">
-                    <h2 style="text-align:center">
-                        Create New Student Account</h2>
-                    <br />
-                    <br />
-                    First Name:
-                    <asp:TextBox ID="txtRegFirstName" runat="server" Placeholder="First Name"></asp:TextBox>
-                    <br />
-                    <br />
-                    Email:
-                    <asp:TextBox ID="txtRegEmail" runat="server" Placeholder="Email Address"></asp:TextBox>
-                    <br />
-                    <br />
-                    Password:
-                    <asp:TextBox ID="txtRegPassword" runat="server" TextMode="Password" Placeholder="Password"></asp:TextBox>
-                    <br />
-                    <br />
-                    <asp:Button ID="btnRegister" runat="server" Text="Register Account" OnClick="btnRegister_Click" />
-                    <br />
-                    <br />
-                    <asp:LinkButton ID="lnkGoToLogin" runat="server" OnClick="lnkGoToLogin_Click" CausesValidation="false">Already have an account? Sign in</asp:LinkButton>
+                        <div id="loginGlobalError" class="inline-feedback error" style="display: none; margin-bottom: 16px;"></div>
+                        <asp:Button ID="btnLogin" runat="server" Text="Sign In" OnClick="btnLogin_Click" CssClass="btn btn-primary" style="width: 100%;"/>
+
+                    <p style="margin-top:16px; text-align:center; font-size: 0.9rem;"><a onclick="toggleAuthForms(true)" style="color: var(--primary-accent); cursor:pointer;">Create a New Profile Handle</a></p>
                 </div>
-            </asp:View>
 
-        </asp:MultiView>
-    </div>
+                <div class="card" id="registerCard" style="display: none;">
+                    <h3 style="margin-bottom: 8px;">Create Registered Profile</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Register using system parameter metrics.</p>
+                    
+                        <div class="form-group">
+                            <label>Full Corporate Account Name</label>
+                            <asp:TextBox runat="server" id="regName" class="form-control" placeholder="e.g. Zetty Adleena" required ="required"></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label>APU Email Address</label>
+                            <input type="email" id="regEmail" class="form-control" placeholder="tpXXXXXX@mail.apu.edu.my" required>
+                            <div class="input-hint">Must match corporate domains (@apu.edu.my / @mail.apu.edu.my)</div>
+                            <span id="regEmailError" class="validation-warning" style="display:none;">Invalid Email format. Please provide a verified APU address.</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Security Access Key (Password)</label>
+                            <input type="password" id="regPass" class="form-control" placeholder="Min 6 characters, 1 uppercase, 1 digit" required>
+                            <div class="input-hint">Requires ≥ 6 characters, 1 uppercase letter, and 1 number.</div>
+                            <span id="regPassError" class="validation-warning" style="display:none;">Password string parameters do not fulfill syntax rule criteria.</span>
+                        </div>
+                        <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%;" disabled>Commit Record</button>
+
+                    <p style="margin-top:16px; text-align:center; font-size: 0.9rem;"><a onclick="toggleAuthForms(false)" style="color: var(--primary-accent); cursor:pointer;">Back to Portal Login</a></p>
+                </div>
+
+            </div>
+        </div>
     
 </asp:Content>

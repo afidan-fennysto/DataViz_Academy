@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="Admin.aspx" />
     <Content Include="App_Data\dataviz_database.mdf" />
     <Content Include="App_Data\dataviz_database_log.ldf">
       <DependentUpon>dataviz_database.mdf</DependentUpon>
@@ -78,6 +79,8 @@
     <Content Include="Auth.aspx" />
     <Content Include="Profile.aspx" />
     <Content Include="Resources.aspx" />
+    <Content Include="script.js" />
+    <Content Include="style.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +90,13 @@
     </Compile>
     <Compile Include="About.aspx.designer.cs">
       <DependentUpon>About.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin.aspx.cs">
+      <DependentUpon>Admin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin.aspx.designer.cs">
+      <DependentUpon>Admin.aspx</DependentUpon>
     </Compile>
     <Compile Include="Assessment.aspx.cs">
       <DependentUpon>Assessment.aspx</DependentUpon>

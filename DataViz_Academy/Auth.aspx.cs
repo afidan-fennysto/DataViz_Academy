@@ -27,22 +27,23 @@ namespace DataViz_Academy
 
         protected void lnkGoToRegister_Click(object sender, EventArgs e)
         {
-            AuthMultiView.ActiveViewIndex = 1; // Shifts focus strictly to the Register view container
+
         }
 
         protected void lnkGoToLogin_Click(object sender, EventArgs e)
         {
-            AuthMultiView.ActiveViewIndex = 0; // Shifts focus strictly back to the Login view container
+
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string username = txtLoginUsername.Text.Trim();
-            string password = txtLoginPassword.Text.Trim();
+            string username = loginName.Text.Trim();
+            string password = loginPass.Text.Trim();
+            string email = loginEmail.Text.Trim();
 
             string connstr = ConfigurationManager.ConnectionStrings["DataViz"].ConnectionString;
 
-            string query = "SELECT Username, Email, PasswordHash, Role FROM [User] WHERE email = @input OR username = @input";
+            string query = "SELECT Username, Email, PasswordHash, Role FROM [User] WHERE email = @email AND username = @username";
 
             using (SqlConnection conn = new SqlConnection(connstr))
             {
@@ -51,7 +52,8 @@ namespace DataViz_Academy
                     try
                     {
                         conn.Open();
-                        comm.Parameters.AddWithValue("@input", username);
+                        comm.Parameters.AddWithValue("@username", username);
+                        comm.Parameters.AddWithValue("@email", email);
                         comm.Parameters.AddWithValue("@password", password);
 
                         //int count = (int)comm.ExecuteScalar();
@@ -66,7 +68,7 @@ namespace DataViz_Academy
                             {
                                 Response.Write("Login Successful for Email " + reader["Email"].ToString());
 
-                                Session["Email"] = reader["Email"].ToString();
+                                //Session["Email"] = reader["Email"].ToString();
                                 Session["Role"] = userRole;
 
                                 Response.Redirect("Profile.aspx");
@@ -115,4 +117,5 @@ namespace DataViz_Academy
         }
 
     }
+     
 }
