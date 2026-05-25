@@ -69,9 +69,10 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="Admin.aspx" />
-    <Content Include="App_Data\dataviz_database.mdf" />
-    <Content Include="App_Data\dataviz_database_log.ldf">
-      <DependentUpon>dataviz_database.mdf</DependentUpon>
+    <Content Include="Alep.aspx" />
+    <Content Include="App_Data\DatavizBase.mdf" />
+    <Content Include="App_Data\DatavizBase_log.ldf">
+      <DependentUpon>DatavizBase.mdf</DependentUpon>
     </Content>
     <Content Include="Assessment.aspx" />
     <Content Include="Forum.aspx" />
@@ -98,6 +99,13 @@
     </Compile>
     <Compile Include="Admin.aspx.designer.cs">
       <DependentUpon>Admin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Alep.aspx.cs">
+      <DependentUpon>Alep.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Alep.aspx.designer.cs">
+      <DependentUpon>Alep.aspx</DependentUpon>
     </Compile>
     <Compile Include="Assessment.aspx.cs">
       <DependentUpon>Assessment.aspx</DependentUpon>

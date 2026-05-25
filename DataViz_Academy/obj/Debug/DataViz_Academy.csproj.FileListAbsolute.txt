@@ -175,3 +175,7 @@ C:\Users\User\source\repos\DataViz_Academy\DataViz_Academy\obj\Debug\DataViz_Aca
 C:\Users\User\source\repos\DataViz_Academy\DataViz_Academy\obj\Debug\DataViz_Academy.csproj.CopyComplete
 C:\Users\User\source\repos\DataViz_Academy\DataViz_Academy\obj\Debug\DataViz_Academy.dll
 C:\Users\User\source\repos\DataViz_Academy\DataViz_Academy\obj\Debug\DataViz_Academy.pdb
+C:\Users\User\source\repos\DataViz_Academyaa\DataViz_Academy\obj\Debug\DataViz_Academy.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\DataViz_Academyaa\DataViz_Academy\obj\Debug\DataViz_Academy.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\DataViz_Academyaa\DataViz_Academy\obj\Debug\DataViz_Academy.dll
+C:\Users\User\source\repos\DataViz_Academyaa\DataViz_Academy\obj\Debug\DataViz_Academy.pdb

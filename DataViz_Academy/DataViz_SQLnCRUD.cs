@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 public class DatabaseHandler
 {
     // Using |DataDirectory| makes the project portable across different computers
-    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|dataviz_database.mdf;Integrated Security=True;";
+    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\DatavizBase.mdf;Integrated Security=True;";
 
     // Helper method to get an open connection safely
     private SqlConnection GetConnection()
@@ -277,6 +277,77 @@ public class DatabaseHandler
         }
         return dt;
     }*/
+
+    // Updates student quiz scores and awards badges dynamically upon module completion
+    public bool UpdateUserProgress(int userId, int moduleId, decimal score, string status, int percentage)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            // 1. Update or Insert the progression log record
+            string progressQuery = @"IF EXISTS (SELECT 1 FROM UserProgress WHERE UserID = @UserID AND ModuleID = @ModuleID)
+                                    UPDATE UserProgress SET Score = @Score, CompletionStatus = @Status, ProgressionPercentage = @Percentage WHERE UserID = @UserID AND ModuleID = @ModuleID
+                                 ELSE
+                                    INSERT INTO UserProgress (UserID, ModuleID, Score, CompletionStatus, ProgressionPercentage) VALUES (@UserID, @ModuleID, @Score, @Status, @Percentage);";
+
+            using (SqlCommand cmd = new SqlCommand(progressQuery, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                cmd.Parameters.AddWithValue("@ModuleID", moduleId);
+                cmd.Parameters.AddWithValue("@Score", score);
+                cmd.Parameters.AddWithValue("@Status", status);
+                cmd.Parameters.AddWithValue("@Percentage", percentage);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            // 2. AUTOMATIC BADGE CHECK: If the module is finished, award the badge immediately!
+            if (status.Equals("Completed", StringComparison.OrdinalIgnoreCase))
+            {
+                // This query inserts a badge record only if the user hasn't already earned it
+                string badgeQuery = @"INSERT INTO UserBadge (UserID, BadgeID)
+                                  SELECT @UserID, BadgeID 
+                                  FROM Badge 
+                                  WHERE ModuleID = @ModuleID
+                                  AND NOT EXISTS (
+                                      SELECT 1 FROM UserBadge ub 
+                                      JOIN Badge b ON ub.BadgeID = b.BadgeID 
+                                      WHERE ub.UserID = @UserID AND b.ModuleID = @ModuleID
+                                  );";
+
+                using (SqlCommand badgeCmd = new SqlCommand(badgeQuery, conn))
+                {
+                    badgeCmd.Parameters.AddWithValue("@UserID", userId);
+                    badgeCmd.Parameters.AddWithValue("@ModuleID", moduleId);
+                    badgeCmd.ExecuteNonQuery(); // Executes quietly in the background
+                }
+            }
+        }
+        return true;
+    }
+
+    // Call this to display all earned badges on the Member Profile Page!
+    public DataTable GetUserBadges(int userId)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = @"SELECT b.BadgeName, b.Description, b.IconURL, ub.DateEarned 
+                        FROM UserBadge ub
+                        JOIN Badge b ON ub.BadgeID = b.BadgeID
+                        WHERE ub.UserID = @UserID
+                        ORDER BY ub.DateEarned DESC";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+        }
+        return dt;
+    }
 
     // Update primary profile texts inside the relational dataset
     public bool UpdateUserProfile(string oldEmail, string newName, string newEmail)
