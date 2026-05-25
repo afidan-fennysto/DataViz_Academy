@@ -82,6 +82,7 @@
     <Content Include="script.js" />
     <Content Include="style.css" />
     <Content Include="Web.config" />
+    <Content Include="ZettyProfile.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">
@@ -148,6 +149,13 @@
     </Compile>
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="ZettyProfile.aspx.cs">
+      <DependentUpon>ZettyProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ZettyProfile.aspx.designer.cs">
+      <DependentUpon>ZettyProfile.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
