@@ -16,6 +16,9 @@ namespace DataViz_Academy
 {
     public partial class Login : System.Web.UI.Page
     {
+
+        private DatabaseHandler db = new DatabaseHandler();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             // Optional check: If user is already logged in, skip auth screen
@@ -25,21 +28,13 @@ namespace DataViz_Academy
             }
         }
 
-        protected void lnkGoToRegister_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void lnkGoToLogin_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void btnLogin_Click(object sender, EventArgs e)
+        protected void BtnLogin_Click(object sender, EventArgs e)
         {
             string username = loginName.Text.Trim();
             string password = loginPass.Text.Trim();
             string email = loginEmail.Text.Trim();
+
+            DataTable userTable = db.LoginUser(username, password);
 
             string connstr = ConfigurationManager.ConnectionStrings["DataViz"].ConnectionString;
 
@@ -91,7 +86,7 @@ namespace DataViz_Academy
 
         }
 
-        protected void btnRegister_Click(object sender, EventArgs e)
+        protected void BtnSubmit_Click(object sender, EventArgs e)
         {
             // Insert your registration SQL queries here.
         }

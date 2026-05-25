@@ -26,7 +26,7 @@
                         </div>
 
                         <div id="loginGlobalError" class="inline-feedback error" style="display: none; margin-bottom: 16px;"></div>
-                        <asp:Button ID="btnLogin" runat="server" Text="Sign In" OnClick="btnLogin_Click" CssClass="btn btn-primary" style="width: 100%;"/>
+                        <asp:Button ID="btnLogin" runat="server" Text="Sign In" OnClick="BtnLogin_Click" CssClass="btn btn-primary" style="width: 100%;"/>
 
                     <p style="margin-top:16px; text-align:center; font-size: 0.9rem;"><a onclick="toggleAuthForms(true)" style="color: var(--primary-accent); cursor:pointer;">Create a New Profile Handle</a></p>
                 </div>
@@ -41,17 +41,18 @@
                         </div>
                         <div class="form-group">
                             <label>APU Email Address</label>
-                            <input type="email" id="regEmail" class="form-control" placeholder="tpXXXXXX@mail.apu.edu.my" required>
+                            <asp:TextBox ID="regEmail" runat="server" TextMode="Email" CssClass="form-control" placeholder="tpXXXXXX@mail.apu.edu.my" required="required"></asp:TextBox>
                             <div class="input-hint">Must match corporate domains (@apu.edu.my / @mail.apu.edu.my)</div>
                             <span id="regEmailError" class="validation-warning" style="display:none;">Invalid Email format. Please provide a verified APU address.</span>
                         </div>
                         <div class="form-group">
                             <label>Security Access Key (Password)</label>
-                            <input type="password" id="regPass" class="form-control" placeholder="Min 6 characters, 1 uppercase, 1 digit" required>
+                            <asp:TextBox ID="regPass" runat="server" TextMode="Password" CssClass="form-control" placeholder="Min 6 characters, 1 uppercase, 1 digit" required="required"></asp:TextBox>
                             <div class="input-hint">Requires ≥ 6 characters, 1 uppercase letter, and 1 number.</div>
                             <span id="regPassError" class="validation-warning" style="display:none;">Password string parameters do not fulfill syntax rule criteria.</span>
                         </div>
-                        <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%;" disabled>Commit Record</button>
+
+                        <asp:Button ID="regSubmitBtn" runat="server" Text="Commit Record" OnClick="BtnSubmit_Click" CssClass="btn btn-primary" style="width: 100%;" />
 
                     <p style="margin-top:16px; text-align:center; font-size: 0.9rem;"><a onclick="toggleAuthForms(false)" style="color: var(--primary-accent); cursor:pointer;">Back to Portal Login</a></p>
                 </div>
