@@ -38,15 +38,16 @@ public class DatabaseHandler
         }
     }
 
-    public DataTable LoginUser(string username, string passwordHash)
+    public DataTable LoginUser(string username, string email, string passwordHash)
     {
         DataTable dt = new DataTable();
         using (SqlConnection conn = GetConnection())
         {
-            string query = "SELECT UserID, Username, Role FROM [User] WHERE Username = @Username AND PasswordHash = @PasswordHash";
+            string query = "SELECT UserID, Username, Email, Role FROM [User] WHERE Username = @Username AND Email = @Email AND PasswordHash = @PasswordHash";
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Email", email);
                 cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
                 using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {

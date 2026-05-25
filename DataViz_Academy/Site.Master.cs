@@ -19,13 +19,14 @@ namespace DataViz_Academy
         protected void btnSubmitPost_Click(object sender, EventArgs e)
         {
             // Security verification: verify the user session exists before processing data
-            if (Session["studentid"] == null)
+            if (Session["Username"] == null)
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Anonymous posts blocked. Please authenticate.');", true);
                 return;
             }
 
-            int currentUserId = Convert.ToInt32(Session["studentid"]);
+            if (Session["UserID"] == null) { /* block post */ }
+            int currentUserId = Convert.ToInt32(Session["UserID"]);
             string topicText = txtForumTopic.Text.Trim();
             string contentText = txtForumContent.Text.Trim();
 

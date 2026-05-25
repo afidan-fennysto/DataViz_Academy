@@ -13,6 +13,7 @@
     </asp:ContentPlaceHolder>
 </head>
 <body>
+
     <form id="form1" runat="server">
 
         <div style="display: flex; width: 100%; min-height: 100vh; margin:0; padding:0;">
@@ -22,8 +23,9 @@
                 <div class="sidebar-brand">DataViz Academy</div>
                 
                 <%-- FIXED: Added a distinct ID and localized fallback layout styling for the greeting block --%>
-                <div id="roleIndicator" class="role-indicator role-guest" style="padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 4px; font-size: 0.85rem; font-weight: 500; margin-bottom: 16px; color: #cbd5e1; transition: all 0.3s ease;">
-                    Guest Account
+                <div id="roleIndicator" class="role-indicator"
+                style="padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 4px; font-size: 0.85rem; font-weight: 500; margin-bottom: 16px; color: #cbd5e1;">
+                <%= Session["Username"] != null ? "Hello, " + Session["Username"].ToString() : "Guest Account" %>
                 </div>
                 
                 <nav>
@@ -35,18 +37,19 @@
                         <li><a href="Resources.aspx">External Documentation</a></li>
                         <li><a href="About.aspx">About Project Initiatives</a></li>
                         
-                        <%-- VISUAL SEPARATOR LINE --%>
-                        <hr id="navSeparator" style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 12px 0;" />
                         
-                        <%-- DEDICATED PORTAL LOGIN ACTION TAB (Hidden dynamically via JavaScript upon login) --%>
-                        <li id="navLoginItem" style="background: rgba(99, 102, 241, 0.15); border-left: 3px solid #6366f1; border-radius: 4px;">
+                        
+                        <% if (Session["Username"] == null) { %>
+                        <li id="navLoginItem" style="background: rgba(99,102,241,0.15); border-left: 3px solid #6366f1; border-radius: 4px;">
                             <a href="Auth.aspx" style="color: #a5b4fc; font-weight: 600; padding-left: 12px;">🔒 Portal Login</a>
                         </li>
-
-                        <%-- ADDED: DYNAMIC LOG OUT ACTION TAB (Displayed only when logged in) --%>
-                        <li id="navLogoutItem" style="display: none; background: rgba(244, 63, 94, 0.1); border-left: 3px solid #f43f5e; border-radius: 4px;">
-                            <a href="#" onclick="handleUserLogout(); return false;" style="color: #fca5a5; font-weight: 600; padding-left: 12px;">🚪 Log Out Session</a>
+                        <% } else { %>
+                        <li id="navLogoutItem" style="background: rgba(244,63,94,0.1); border-left: 3px solid #f43f5e; border-radius: 4px;">
+                            <asp:LinkButton ID="lnkLogout" runat="server" OnClick="lnkLogout_Click"
+                            style="color: #fca5a5; font-weight: 600; padding-left: 12px;">🚪 Log Out Session</asp:LinkButton>
                         </li>
+                        <% } %>
+
                     </ul>
                 </nav>
             </aside>
@@ -87,48 +90,5 @@
 
     <script src="script.js"></script>
 
-    <%-- GLOBAL RUNTIME LOGIN STATE SYNC CORES --%>
-    <script type="text/javascript">
-        window.addEventListener('DOMContentLoaded', function () {
-            syncGlobalNavigationState();
-        });
-
-        function syncGlobalNavigationState() {
-            var isLoggedIn = localStorage.getItem('userLoggedIn');
-            var savedName = localStorage.getItem('dashboardDisplayName') || "Zetty Adleena";
-            
-            var indicator = document.getElementById('roleIndicator');
-            var loginTab = document.getElementById('navLoginItem');
-            var logoutTab = document.getElementById('navLogoutItem');
-
-            if (isLoggedIn === 'true') {
-                // 1. Map personalized greeting context
-                if (indicator) {
-                    indicator.innerText = "Hello, " + savedName;
-                    indicator.style.color = "#a5b4fc"; 
-                    indicator.style.background = "rgba(99, 102, 241, 0.15)";
-                }
-                // 2. Toggle Navigation Link Sets
-                if (loginTab) loginTab.style.display = 'none';
-                if (logoutTab) logoutTab.style.display = 'block';
-            } else {
-                // Fallback Guest Layout parameters
-                if (indicator) {
-                    indicator.innerText = "Guest Account";
-                    indicator.style.color = "#cbd5e1";
-                    indicator.style.background = "rgba(255,255,255,0.05)";
-                }
-                if (loginTab) loginTab.style.display = 'block';
-                if (logoutTab) logoutTab.style.display = 'none';
-            }
-        }
-
-        // Clean logout engine routine to reset simulation back to pristine state
-        function handleUserLogout() {
-            localStorage.removeItem('userLoggedIn');
-            // Keeps collected badges intact, but logs the profile out for demo reset
-            window.location.href = 'Home.aspx';
-        }
-    </script>
 </body>
 </html>

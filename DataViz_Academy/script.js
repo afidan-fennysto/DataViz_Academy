@@ -107,6 +107,14 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleAuthForms(showRegister) {
     document.getElementById('loginCard').style.display = showRegister ? 'none' : 'block';
     document.getElementById('registerCard').style.display = showRegister ? 'block' : 'none';
+
+    // FIX: Enable/disable required on hidden fields so browser validation doesn't choke
+    const regFields = document.querySelectorAll('#registerCard input');
+    regFields.forEach(f => showRegister ? f.setAttribute('required', 'required') : f.removeAttribute('required'));
+
+    const loginFields = document.querySelectorAll('#loginCard input');
+    loginFields.forEach(f => showRegister ? f.removeAttribute('required') : f.setAttribute('required', 'required'));
+
     const backendErrorMsg = document.getElementById('loginGlobalError');
     if (backendErrorMsg) backendErrorMsg.style.display = 'none';
 }
