@@ -357,7 +357,15 @@ function closeCourseWorkspace() {
    FORUM MODAL POPUP, UPVOTE/DOWNVOTE, AND REPLY MATRIX ACTIONS
    ========================================================================== */
 function openForumModal() {
-    document.getElementById('forumCreatorModal').classList.add('active');
+    if (isUserGuest()) {
+        alert('🔒 Guest access is read-only. Please log in to publish a community thread.');
+        return;
+    }
+
+    var modal = document.getElementById('forumCreatorModal');
+    if (modal) {
+        modal.classList.add('active');
+    }
 }
 
 function closeForumModal() {
@@ -439,4 +447,73 @@ function renderForumFeedStack() {
    ========================================================================== */
 function closeModal(id) {
     document.getElementById(id).classList.remove('active');
+}
+
+/* ==========================================================================
+   COURSES DIRECTORY MATRIX & EXTENDED CURRICULUM DATA
+   ========================================================================== */
+const universalCurriculum = [
+    {
+        courseId: "bar",
+        chapters: [
+            {
+                title: "Chapter 1: Discrete Scale Allocations",
+                text: "Bar graphs map absolute numerical weights cleanly onto independent categoric bins. Unlike continuous metrics, individual bar channels require clear, explicit visual gaps to communicate isolation parameters and prevent structural clutter."
+            },
+            {
+                title: "Chapter 2: Baseline Calibration Requirements",
+                text: "Truncating the quantitative grid baseline away from an exact zero benchmark represents a catastrophic distortion error. Artificially amplifying column height fragments the physical ratio proportions, leading to deceptive tracking trends."
+            }
+        ]
+    },
+    {
+        courseId: "scatter",
+        chapters: [
+            {
+                title: "Chapter 1: Spatial Grid Clustering",
+                text: "Scatterplots project raw multi-dimensional coordinate vectors across a continuous cartesian plain. Mapped density clusters highlight spatial correlations, outliers, and cluster anomalies without aggregating metadata variables prematurely."
+            },
+            {
+                title: "Chapter 2: Decoupling Trend Fluctuations",
+                text: "Overlaying high-precision linear regression models reveals directional paths. Analysts must calculate coordinate distribution variance metrics explicitly to prevent confounding items from fabricating false correlation artifacts."
+            }
+        ]
+    },
+    {
+        courseId: "powerbi",
+        chapters: [
+            {
+                title: "Chapter 1: Dimensional Star Schemas",
+                text: "Enterprise data engineering dictates isolating factual transactional data variables inside narrow tables, while joining context keys outwards to independent dimensional fields. This relational blueprint drastically improves DAX calculation cycles."
+            },
+            {
+                title: "Chapter 2: Context Evaluation Filters",
+                text: "Understanding Row Context and Filter Context transformations defines complex calculation reliability. Modifying data pathways explicitly via CALCULATE commands overrules active visualization slicer variables dynamically."
+            }
+        ]
+    },
+    {
+        courseId: "tableau",
+        chapters: [
+            {
+                title: "Chapter 1: Scoping Level of Detail (LOD)",
+                text: "Tableau workbook filters alter visualization context rows natively. Level of Detail statements provide advanced control parameters, allowing mathematical equations to run independent of viewport structural shelves."
+            },
+            {
+                title: "Chapter 2: FIXED vs INCLUDE Operations",
+                text: "A FIXED evaluation parameter runs calculation operations entirely detached from dimension fields active on shelves, computing values directly against targeted database keys before structural sorting steps complete."
+            }
+        ]
+    }
+];
+
+/* ==========================================================================
+   DATASET ACADEMY - TEAM PORTFOLIO ROUTER
+   ========================================================================== */
+function navigateToDeveloperProfile(developerName) {
+    if (!developerName) return;
+
+    var targetPage = developerName + "Profile.aspx";
+
+    window.location.href = targetPage;
 }

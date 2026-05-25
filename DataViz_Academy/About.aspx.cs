@@ -13,5 +13,31 @@ namespace DataViz_Academy
         {
 
         }
+
+        protected void BtnZetty_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/ZettyProfile.aspx");
+        }
+
+        protected void BtnRaif_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/RaifProfile.aspx");
+        }
+
+        protected void BtnAlif_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/AlifProfile.aspx");
+        }
+
+        protected void BtnAleeya_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/AleeyaProfile.aspx");
+        }
+
+        protected void BtnAfi_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/AfiProfile.aspx");
+        }
+
     }
 }

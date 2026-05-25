@@ -44,7 +44,7 @@ namespace DataViz_Academy
             }
         }
 
-        protected void btnSubmitPost_Click(object sender, EventArgs e)
+        protected void BtnSubmitPost_Click(object sender, EventArgs e)
         {
             // Security verification: verify the user session exists before processing data
             if (Session["Username"] == null)
@@ -76,7 +76,7 @@ namespace DataViz_Academy
             }
         }
 
-        protected void lnkLogout_Click(object sender, EventArgs e)
+        protected void LnkLogout_Click(object sender, EventArgs e)
         {
             // Abandon the current runtime state, clear session attributes, and return to auth gateway
             Session.Clear();

@@ -55,7 +55,7 @@
                         </li>
                         <% } else { %>
                         <li id="navLogoutItem" style="background: rgba(244,63,94,0.1); border-left: 3px solid #f43f5e; border-radius: 4px;">
-                            <asp:LinkButton ID="lnkLogout" runat="server" OnClick="lnkLogout_Click"
+                            <asp:LinkButton ID="lnkLogout" runat="server" OnClick="LnkLogout_Click"
                             style="color: #fca5a5; font-weight: 600; padding-left: 12px;">🚪 Log Out Session</asp:LinkButton>
                         </li>
                         <% } %>
@@ -64,19 +64,19 @@
                 </nav>
             </aside>
 
-            <%-- MAIN FRAME CONTEXT ROW VIEW CONTAINER --%>
             <main style="margin-left: 260px; padding: 40px; width: calc(100% - 260px); background: var(--primary-bg); flex-grow: 1;">
-                
+    
                 <asp:ContentPlaceHolder ID="MainContent" runat="server">
                 </asp:ContentPlaceHolder>
 
-                <div id="forumCreatorModal" class="modal-overlay">
+                <%-- CONVERTED DIRECTLY INTO A SERVER CONTROL --%>
+                <div id="forumCreatorModal" runat="server" class="modal-overlay">
                     <div class="modal-box" style="max-width: 550px;">
                         <div class="modal-header">Start a Community Thread</div>
                         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
                             Publish visualization guidelines or ask coding queries to active students.
                         </p>
-                        
+            
                         <div id="newPostFormWrapper">
                             <div class="form-group">
                                 <asp:TextBox ID="txtForumTopic" runat="server" CssClass="form-control" placeholder="Post Title"></asp:TextBox>
@@ -86,7 +86,7 @@
                             </div>
                             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                                 <button type="button" class="btn btn-outline" style="width: auto; margin:0;" onclick="closeForumModal()">Cancel</button>
-                                <asp:Button ID="btnSubmitPost" runat="server" Text="Publish Thread" CssClass="btn btn-primary" style="width: auto; margin:0;" OnClick="btnSubmitPost_Click" />
+                                <asp:Button ID="btnSubmitPost" runat="server" Text="Publish Thread" CssClass="btn btn-primary" style="width: auto; margin:0;" OnClick="BtnSubmitPost_Click" />
                             </div>
                         </div>
                     </div>
@@ -97,6 +97,13 @@
         </div>
 
     </form>
+
+    <script type="text/javascript">
+        window.AppSession = {
+            role: '<%= Convert.ToString(Session["Role"]).ToLower() %>',
+            username: '<%= Convert.ToString(Session["Username"]) %>'
+        };
+    </script>
 
     <script src="script.js"></script>
 

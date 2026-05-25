@@ -26,11 +26,9 @@
 
     <div id="aboutView" class="app-view active-view">
         
-        <%-- RE-TITLED CORE HEADER TRACK --%>
         <h1>About Us</h1>
         <p class="view-subtitle">Project framework, system scope parameters, and development team milestones.</p>
         
-        <%-- UPDATED SYSTEM OBJECTIVE & MISSION STATEMENT --%>
         <div class="about-hero-card">
             <h3 style="margin: 0 0 8px 0; color: #1a202c; font-size: 1.25rem; font-weight: 700;">Why We Created DataViz Academy</h3>
             <p style="color: #4a5568; line-height: 1.7; font-size: 0.975rem; margin: 0; text-align: justify;">
@@ -38,7 +36,6 @@
             </p>
         </div>
 
-        <%-- MEET THE TEAM DEV GRID PANE --%>
         <h2 style="font-size: 1.5rem; font-weight: 700; color: #1a202c; margin-bottom: 4px;">Meet the Developers</h2>
         <p style="color: #718096; font-size: 0.9rem; margin: 0 0 20px 0;">Select any card to navigate directly to our unique standalone portfolio websites.</p>
 
@@ -53,7 +50,7 @@
                         Oversees project schedules, audience requirements elicitation, and structural documentation quality checks.
                     </p>
                 </div>
-                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="window.location.href='ZettyProfile.aspx';">Explore Website &rarr;</button>
+                <asp:Button ID="btnZetty" runat="server" Text="Explore Website &rarr;" CssClass="btn btn-primary" style="width: 100%; margin-top: 20px;" OnClick="BtnZetty_Click" />
             </div>
 
             <div class="dev-portfolio-card">
@@ -65,7 +62,7 @@
                         Spearheads front-end layout styling, interactive component wireframing, and platform user experience blueprints.
                     </p>
                 </div>
-                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="window.location.href='RaifProfile.aspx';">Explore Website &rarr;</button>
+                <asp:Button ID="btnRaif" runat="server" Text="Explore Website &rarr;" CssClass="btn btn-primary" style="width: 100%; margin-top: 20px;" OnClick="BtnRaif_Click" />
             </div>
 
             <div class="dev-portfolio-card">
@@ -77,7 +74,7 @@
                         Manages schema structuring, analytical relational query maps, and CRUD state persistence layers.
                     </p>
                 </div>
-                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="window.location.href='AlifProfile.aspx';">Explore Website &rarr;</button>
+                <asp:Button ID="btnAlif" runat="server" Text="Explore Website &rarr;" CssClass="btn btn-primary" style="width: 100%; margin-top: 20px;" OnClick="BtnAlif_Click" />
             </div>
 
             <div class="dev-portfolio-card">
@@ -89,7 +86,7 @@
                         Expert in asynchronous view rendering, real-time validation scripting, and browser event listeners.
                     </p>
                 </div>
-                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="window.location.href='AleeyaProfile.aspx';">Explore Website &rarr;</button>
+                <asp:Button ID="btnAleeya" runat="server" Text="Explore Website &rarr;" CssClass="btn btn-primary" style="width: 100%; margin-top: 20px;" OnClick="BtnAleeya_Click" />
             </div>
 
             <div class="dev-portfolio-card">
@@ -101,7 +98,7 @@
                         Focuses on user authentication state monitoring, session clearing gates, and role privilege verification.
                     </p>
                 </div>
-                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="window.location.href='AfiProfile.aspx';">Explore Website &rarr;</button>
+                <asp:Button ID="btnAfi" runat="server" Text="Explore Website &rarr;" CssClass="btn btn-primary" style="width: 100%; margin-top: 20px;" OnClick="BtnAfi_Click" />
             </div>
 
         </div>

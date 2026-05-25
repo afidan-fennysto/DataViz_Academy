@@ -69,6 +69,15 @@ namespace DataViz_Academy
         protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
 
         /// <summary>
+        /// forumCreatorModal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl forumCreatorModal;
+
+        /// <summary>
         /// txtForumTopic control.
         /// </summary>
         /// <remarks>
