@@ -238,4 +238,82 @@ public class DatabaseHandler
         }
         return dt;
     }
+
+    // Fetch user detail row cleanly based on their unique tracking identifier
+    public DataTable GetUserProfile(string email)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = GetConnection()) // Uses your safe open method
+        {
+            // Adjust column names (Username, Email, AccentColor) if your [User] schema varies slightly
+            string query = "SELECT Username, Email FROM [user] WHERE Email = @Email";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+        }
+        return dt;
+    }
+
+    // Fetch all collected badges mapped directly to this student account
+    /*public DataTable GetUserBadges(string email)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = "SELECT BadgeName, ColorAccent FROM UserBadges WHERE StudentEmail = @Email";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+        }
+        return dt;
+    }*/
+
+    // Update primary profile texts inside the relational dataset
+    public bool UpdateUserProfile(string oldEmail, string newName, string newEmail)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = "UPDATE [User] SET Username = @Username, Email = @NewEmail WHERE Email = @OldEmail";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Username", newName);
+                cmd.Parameters.AddWithValue("@NewEmail", newEmail);
+                cmd.Parameters.AddWithValue("@OldEmail", oldEmail);
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+    }
+
+    // Wipe tracking markers to reset system flow fields back to layout baselines
+    public void ResetProfileData(string email)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            string query1 = "UPDATE [User] SET Username = '' WHERE Email = @Email";
+            using (SqlCommand cmd = new SqlCommand(query1, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.ExecuteNonQuery();
+            }
+
+            //string query2 = "DELETE FROM UserBadges WHERE StudentEmail = @Email";
+            //using (SqlCommand cmd = new SqlCommand(query2, conn))
+            //{
+                //cmd.Parameters.AddWithValue("@Email", email);
+                //cmd.ExecuteNonQuery();
+            //}
+        }
+    }
+
+
 }

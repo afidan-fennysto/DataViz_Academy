@@ -13,5 +13,32 @@ namespace DataViz_Academy
 
     public partial class Admin
     {
+
+        /// <summary>
+        /// pnlAdminGateLocked control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAdminGateLocked;
+
+        /// <summary>
+        /// pnlAdminGateUnlocked control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAdminGateUnlocked;
+
+        /// <summary>
+        /// gvAdminCourses control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvAdminCourses;
     }
 }

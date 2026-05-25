@@ -13,7 +13,35 @@ namespace DataViz_Academy
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            ConfigureNavigationRoleGates();
+        }
 
+        private void ConfigureNavigationRoleGates()
+        {
+            // Fallback: If no user session token is found, treat as guest state lines
+            if (Session["Role"] == null)
+            {
+                // 1. GUEST ACCESS STATE
+                menuDashboard.Visible = false;   // Hides the dashboard list item entirely
+                menuAdminPanel.Visible = false;  // Hides the admin list item entirely
+            }
+            else
+            {
+                string runningUserRole = Session["Role"].ToString().ToLower();
+
+                if (runningUserRole == "admin")
+                {
+                    // 2. PRIVILEGED MASTER ADMIN STATE
+                    menuDashboard.Visible = true;
+                    menuAdminPanel.Visible = true;   // Admin sees everything
+                }
+                else
+                {
+                    // 3. REGULAR VALIDATED MEMBER / STUDENT STATE
+                    menuDashboard.Visible = true;    // Students view their own profile logs
+                    menuAdminPanel.Visible = false;  // Students are safely blocked from admin tooling
+                }
+            }
         }
 
         protected void btnSubmitPost_Click(object sender, EventArgs e)

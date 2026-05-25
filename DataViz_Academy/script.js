@@ -126,8 +126,72 @@ function navigateToDeveloperWeb(webUrl) {
 /* ==========================================================================
    REGISTERED USER DASHBOARD SELF-EDIT CUSTOMIZATION LABELS
    ========================================================================== */
+function initProfileDashboard() {
+    // Read local data or fall back to defaults
+    var savedName = localStorage.getItem('dashboardDisplayName') || "Zetty Adleena";
+    var savedEmail = localStorage.getItem('dashboardDisplayEmail') || "zetty@mail.apu.edu.my";
+    var savedAvatar = localStorage.getItem('dashboardAvatarImg') || "";
+    var savedAccent = localStorage.getItem('themeAccent') || "#6366f1";
+
+    // Apply texts & fields
+    if (document.getElementById('dashAccountName')) document.getElementById('dashAccountName').innerText = savedName;
+    if (document.getElementById('dashAccountEmail')) document.getElementById('dashAccountEmail').innerText = savedEmail;
+    if (document.getElementById('editProfileNameInput')) document.getElementById('editProfileNameInput').value = savedName;
+    if (document.getElementById('editProfileEmailInput')) document.getElementById('editProfileEmailInput').value = savedEmail;
+
+    // Apply Accent theme
+    applyDashboardAccentStyles(savedAccent);
+
+    // Dynamic Avatar Rendering
+    var avatarDisplay = document.getElementById('dashAvatarDisplay');
+    if (avatarDisplay) {
+        if (savedAvatar) {
+            avatarDisplay.innerHTML = `<img src="${savedAvatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" />`;
+        } else {
+            avatarDisplay.innerHTML = "";
+            avatarDisplay.innerText = savedName.charAt(0).toUpperCase();
+        }
+    }
+
+    // Process Badges Grid
+    var rawBadges = localStorage.getItem('collectedBadges') || "";
+    var badgeList = rawBadges ? rawBadges.split(',') : [];
+
+    if (document.getElementById('dashBadgeCountDisplay')) document.getElementById('dashBadgeCountDisplay').innerText = badgeList.length;
+    if (document.getElementById('dashPassedQuestions')) document.getElementById('dashPassedQuestions').innerText = badgeList.length * 3;
+
+    var badgeTargetBox = document.getElementById('badgesGridDisplayContainer');
+    if (badgeTargetBox) {
+        if (badgeList.length === 0) {
+            badgeTargetBox.innerHTML = `
+                <div style="grid-column: 1/-1; text-align:center; padding: 24px; border: 2px dashed #e2e8f0; border-radius:6px;">
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0;">No technical status badges collected yet. Complete validation tracks inside the Course Workspace to unlock components.</p>
+                </div>`;
+            return;
+        }
+
+        var badgesHtml = "";
+        badgeList.forEach(function (badgeName) {
+            var colorAccent = "#6366f1";
+            if (badgeName === "Power BI") colorAccent = "#f59e0b";
+            if (badgeName === "Python") colorAccent = "#3b82f6";
+            if (badgeName === "Java") colorAccent = "#ef4444";
+            if (badgeName === "SQL") colorAccent = "#10b981";
+            if (badgeName === "Advanced Excel") colorAccent = "#6b7280";
+
+            badgesHtml += `
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:16px; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+                    <div style="font-size:2.2rem; margin-bottom:6px;">🏅</div>
+                    <strong style="display:block; font-size:0.85rem; color:#1a202c; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${badgeName}</strong>
+                    <span style="display:inline-block; font-size:0.7rem; font-weight:700; color:#ffffff; background:${colorAccent}; padding:2px 6px; border-radius:4px; margin-top:6px; text-transform:uppercase;">Verified</span>
+                </div>`;
+        });
+        badgeTargetBox.innerHTML = badgesHtml;
+    }
+}
+
 function updateDashboardAccent(hexColor) {
-    AppState.currentUser.accentColor = hexColor;
+    localStorage.setItem('themeAccent', hexColor);
     applyDashboardAccentStyles(hexColor);
 }
 
@@ -139,29 +203,37 @@ function applyDashboardAccentStyles(hexColor) {
 }
 
 function saveDashboardCustomizations() {
-    const nameInput = document.getElementById('editProfileNameInput').value.trim();
-    const fileInput = document.getElementById('editProfileAvatarFile');
-    const feedback = document.getElementById('customizationFeedback');
+    var typedName = document.getElementById('editProfileNameInput').value.trim();
+    var typedEmail = document.getElementById('editProfileEmailInput').value.trim();
+    var fileInput = document.getElementById('editProfileAvatarFile');
 
-    if (nameInput.length > 0) {
-        AppState.currentUser.name = nameInput;
+    if (!typedName || !typedEmail) {
+        alert("Profile customization fields cannot be left blank!");
+        return;
     }
 
+    localStorage.setItem('dashboardDisplayName', typedName);
+    localStorage.setItem('dashboardDisplayEmail', typedEmail);
+
     if (fileInput && fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
+        var reader = new FileReader();
         reader.onload = function (e) {
-            AppState.currentUser.avatarB64 = e.target.result;
-            commitCustomizationUIDisplay(feedback);
+            localStorage.setItem('dashboardAvatarImg', e.target.result);
+            window.location.reload();
         };
         reader.readAsDataURL(fileInput.files[0]);
     } else {
-        commitCustomizationUIDisplay(feedback);
+        window.location.reload();
     }
 }
 
-function commitCustomizationUIDisplay(feedbackNode) {
-    feedbackNode.style.display = 'block';
-    setTimeout(() => feedbackNode.style.display = 'none', 2000);
+function resetWorkspaceData() {
+    localStorage.removeItem('collectedBadges');
+    localStorage.removeItem('dashboardDisplayName');
+    localStorage.removeItem('dashboardDisplayEmail');
+    localStorage.removeItem('dashboardAvatarImg');
+    localStorage.removeItem('themeAccent');
+    window.location.reload();
 }
 
 /* ==========================================================================

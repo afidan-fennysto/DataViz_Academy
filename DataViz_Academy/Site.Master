@@ -31,13 +31,23 @@
                 <nav>
                     <ul>
                         <li><a href="Home.aspx">Home Workspace</a></li>
-                        <li><a href="Profile.aspx">My Profile Dashboard</a></li>
+
+                        <li id="menuDashboard" runat="server">
+                            <a href="Profile.aspx" class="nav-item">
+                                <span style="font-size: 1.15rem; margin-right:4px;"></span> My Profile Dashboard
+                            </a>
+                        </li>
+
                         <li><a href="Assessment.aspx">Interactive Course Modules</a></li>
                         <li><a href="Forum.aspx">Community Hub Forum</a></li>
                         <li><a href="Resources.aspx">External Documentation</a></li>
                         <li><a href="About.aspx">About Project Initiatives</a></li>
-                        
-                        
+
+                        <li id="menuAdminPanel" runat="server">
+                            <a href="Admin.aspx" class="nav-item">
+                                <span style="font-size: 1.15rem; margin-right:4px;"></span> Admin Workspace
+                            </a>
+                        </li>
                         
                         <% if (Session["Username"] == null) { %>
                         <li id="navLoginItem" style="background: rgba(99,102,241,0.15); border-left: 3px solid #6366f1; border-radius: 4px;">
