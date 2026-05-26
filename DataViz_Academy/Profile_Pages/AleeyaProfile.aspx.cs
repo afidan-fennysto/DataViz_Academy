@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace DataViz_Academy
 {
-    public partial class ZettyProfile : System.Web.UI.Page
+    public partial class AleeyaProfile : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

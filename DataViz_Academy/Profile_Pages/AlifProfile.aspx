@@ -1,14 +1,6 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" %>
+﻿<%@ Page Title="Alif Portfolio" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AlifProfile.aspx.cs" Inherits="DataViz_Academy.AlifProfile" %>
 
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title>Muhammad Alif Hafiz | Tech Portfolio</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
     <style>
         /* --- Modern Minimalist Theme --- */
@@ -356,9 +348,6 @@
             }
         }
     </style>
-</head>
-<body>
-    <form id="form1" runat="server">
         
         <nav class="navbar">
             <div class="logo">M.A.H</div>
@@ -403,7 +392,7 @@
                 </div>
                 
                 <div class="hero-img-container">
-                    <img src="gambal.JPEG" alt="Muhammad Alif Hafiz" class="profile-img" />
+                    <img src="../Assets/Alep.jpeg" alt="Muhammad Alif Hafiz" class="profile-img" />
                 </div>
             </section>
 
@@ -629,7 +618,6 @@
             </section>
 
         </div>
-    </form>
 
     <script type="text/javascript">
         function filterProjects(category) {
@@ -655,5 +643,5 @@
             }
         }
     </script>
-</body>
-</html>
+
+</asp:Content>

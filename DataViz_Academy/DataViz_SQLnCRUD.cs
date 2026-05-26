@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 public class DatabaseHandler
 {
     // Using |DataDirectory| makes the project portable across different computers
-    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\DatavizBase.mdf;Integrated Security=True;";
+    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\DataVizBase.mdf;Integrated Security=True;";
 
     // Helper method to get an open connection safely
     private SqlConnection GetConnection()
@@ -78,16 +78,46 @@ public class DatabaseHandler
     {
         using (SqlConnection conn = GetConnection())
         {
-            string query = "INSERT INTO Module (Title, Description, Category, ContentURL) VALUES (@Title, @Description, @Category, @ContentURL)";
+            // 1. We insert the Module and immediately ask SQL Server to return the new auto-generated ID (SCOPE_IDENTITY)
+            string query = @"INSERT INTO Module (Title, Description, Category, ContentURL) 
+                         VALUES (@Title, @Description, @Category, @ContentURL);
+                         SELECT SCOPE_IDENTITY();"; // <--- Crucial command!
+
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@Title", title);
                 cmd.Parameters.AddWithValue("@Description", (object)description ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Category", category);
                 cmd.Parameters.AddWithValue("@ContentURL", contentUrl);
-                return cmd.ExecuteNonQuery() > 0;
+
+                // ExecuteScalar reads the single value returned by SCOPE_IDENTITY()
+                object result = cmd.ExecuteScalar();
+
+                if (result != null)
+                {
+                    int newModuleId = Convert.ToInt32(result);
+
+                    // 2. Automate Badge Creation: Create a default badge tied to this new Module ID
+                    string badgeQuery = @"INSERT INTO Badge (BadgeName, Description, IconURL, ModuleID) 
+                                      VALUES (@BadgeName, @BadgeDesc, @IconURL, @ModuleID)";
+
+                    using (SqlCommand badgeCmd = new SqlCommand(badgeQuery, conn))
+                    {
+                        // Generates a clean default name like "Power BI Fundamentals Champion"
+                        badgeCmd.Parameters.AddWithValue("@BadgeName", title + " Champion");
+                        badgeCmd.Parameters.AddWithValue("@BadgeDesc", "Awarded for completing the " + title + " module.");
+
+                        // Assigns a generic placeholder image badge path until the admin edits it
+                        badgeCmd.Parameters.AddWithValue("@IconURL", "~/Images/Badges/default_badge.png");
+                        badgeCmd.Parameters.AddWithValue("@ModuleID", newModuleId);
+
+                        badgeCmd.ExecuteNonQuery();
+                    }
+                    return true;
+                }
             }
         }
+        return false;
     }
 
     public bool Admin_DeleteModule(int moduleId)
@@ -103,31 +133,9 @@ public class DatabaseHandler
         }
     }
 
-    // Updates student quiz scores and dashboard tracking data
-    public bool UpdateUserProgress(int userId, int moduleId, decimal score, string status, int percentage)
-    {
-        using (SqlConnection conn = GetConnection())
-        {
-            string query = @"IF EXISTS (SELECT 1 FROM UserProgress WHERE UserID = @UserID AND ModuleID = @ModuleID)
-                                UPDATE UserProgress SET Score = @Score, CompletionStatus = @Status, ProgressionPercentage = @Percentage WHERE UserID = @UserID AND ModuleID = @ModuleID
-                             ELSE
-                                INSERT INTO UserProgress (UserID, ModuleID, Score, CompletionStatus, ProgressionPercentage) VALUES (@UserID, @ModuleID, @Score, @Status, @Percentage)";
-
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@UserID", userId);
-                cmd.Parameters.AddWithValue("@ModuleID", moduleId);
-                cmd.Parameters.AddWithValue("@Score", score);
-                cmd.Parameters.AddWithValue("@Status", status);
-                cmd.Parameters.AddWithValue("@Percentage", percentage);
-                return cmd.ExecuteNonQuery() > 0;
-            }
-        }
-    }
-
     // FLOW 3: PORTFOLIO / VISUALIZATION CRUD
 
-    public bool Member_CreateVisualization(int userId, string title, string toolUse, string imageUrl)
+    /*public bool Member_CreateVisualization(int userId, string title, string toolUse, string imageUrl)
     {
         using (SqlConnection conn = GetConnection())
         {
@@ -200,12 +208,12 @@ public class DatabaseHandler
             }
         }
         return dt;
-    }
+    }*/
 
     // COMMUNITY FORUM FLOW (Create & Read operations)
 
     // Allows Members to post a new question or topic
-    public bool CreateForumPost(int userId, string topic, string content)
+    /*public bool CreateForumPost(int userId, string topic, string content)
     {
         using (SqlConnection conn = GetConnection())
         {
@@ -237,7 +245,7 @@ public class DatabaseHandler
             }
         }
         return dt;
-    }
+    }*/
 
     // Fetch user detail row cleanly based on their unique tracking identifier
     public DataTable GetUserProfile(string email)
@@ -380,8 +388,8 @@ public class DatabaseHandler
             //string query2 = "DELETE FROM UserBadges WHERE StudentEmail = @Email";
             //using (SqlCommand cmd = new SqlCommand(query2, conn))
             //{
-                //cmd.Parameters.AddWithValue("@Email", email);
-                //cmd.ExecuteNonQuery();
+            //cmd.Parameters.AddWithValue("@Email", email);
+            //cmd.ExecuteNonQuery();
             //}
         }
     }

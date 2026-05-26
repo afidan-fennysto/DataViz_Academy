@@ -16,27 +16,27 @@ namespace DataViz_Academy
 
         protected void BtnZetty_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/ZettyProfile.aspx");
+            Response.Redirect("~/Profile_Pages/ZettyProfile.aspx");
         }
 
         protected void BtnRaif_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/RaifProfile.aspx");
+            Response.Redirect("~/Profile_Pages/RaifProfile.aspx");
         }
 
         protected void BtnAlif_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/AlifProfile.aspx");
+            Response.Redirect("~/Profile_Pages/AlifProfile.aspx");
         }
 
         protected void BtnAleeya_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/AleeyaProfile.aspx");
+            Response.Redirect("~/Profile_Pages/AleeyaProfile.aspx");
         }
 
         protected void BtnAfi_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/AfiProfile.aspx");
+            Response.Redirect("~/Profile_Pages/AfiProfile.aspx");
         }
 
     }

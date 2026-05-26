@@ -7,14 +7,13 @@ namespace DataViz_Academy
 {
     public partial class Admin : System.Web.UI.Page
     {
-        // Leverage your existing DatabaseHandler class
+        // Establish our data access pipeline instance layer handle
         private DatabaseHandler db = new DatabaseHandler();
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Verify if a token session exists and matches our privileged admin credential scale
                 if (Session["Role"] != null && Session["Role"].ToString().ToLower() == "admin")
                 {
                     pnlAdminGateLocked.Visible = false;
@@ -23,7 +22,6 @@ namespace DataViz_Academy
                 }
                 else
                 {
-                    // Secure fallback execution path: lock view down completely
                     pnlAdminGateLocked.Visible = true;
                     pnlAdminGateUnlocked.Visible = false;
                 }
@@ -32,26 +30,60 @@ namespace DataViz_Academy
 
         private void LoadCoursesDirectory()
         {
-            // You can implement custom repository selectors inside your DatabaseHandler later
-            // For now, we fetch your database tables cleanly to populate our GridView
-            // Example stub using forum lists as data structure schema placeholder:
-            DataTable dtCourses = db.GetAllForumPosts();
+            try
+            {
+                DataTable dtCourses = db.GetAllModules();
 
-            // Or if you have a specific method ready: gvAdminCourses.DataSource = db.GetAllCourses();
-            gvAdminCourses.DataSource = dtCourses;
-            gvAdminCourses.DataBind();
+                if (dtCourses != null && dtCourses.Rows.Count > 0)
+                {
+                    gvAdminCourses.DataSource = dtCourses;
+                    gvAdminCourses.DataBind();
+                }
+                else
+                {
+                    // Wipe bound caches if the repository contains zero records
+                    gvAdminCourses.DataSource = null;
+                    gvAdminCourses.DataBind();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Staging fallback display box to gracefully capture connectivity errors
+                Response.Write($"<script>alert('Data connection error trace: {ex.Message}');</script>");
+            }
         }
 
         protected void DeleteCourse_Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            string courseId = btn.CommandArgument;
+            int targetModuleId = Convert.ToInt32(btn.CommandArgument); // Securely intercepts the specific row ID string
 
-            // Execute delete transaction pipeline logic here:
-            // db.DeleteCourse(courseId);
+            try
+            {
 
-            // Re-render dataset matrix indicators instantly
-            LoadCoursesDirectory();
+                bool isDeleted = db.Admin_DeleteModule(targetModuleId);
+
+                if (isDeleted)
+                {
+                    // Clean re-bind execution loop to render changes instantly
+                    LoadCoursesDirectory();
+                }
+                else
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "ErrorAlert", "alert('Transaction processing fault: Node could not be removed.');", true);
+                }
+            }
+            catch (Exception ex)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "ExceptionAlert", $"alert('Critical database exception sweep: {ex.Message}');", true);
+            }
+        }
+
+        protected void InitiateCourseWizard_Click(object sender, EventArgs e)
+        {
+            // Leverages ClientScript to pop open the design CSS wizard layout smoothly on postback
+            string popupModalScript = "var modal = document.getElementById('courseWizardModal'); if(modal) { modal.style.display = 'flex'; }";
+            ClientScript.RegisterStartupScript(this.GetType(), "LaunchWizardModal", popupModalScript, true);
         }
     }
 }
