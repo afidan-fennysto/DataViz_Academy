@@ -39,6 +39,7 @@
                         <asp:TextBox ID="txtNewUrl" runat="server" CssClass="form-control" placeholder="https://..."></asp:TextBox>
                     </div>
                     <asp:Button ID="btnAddModule" runat="server" Text="Add Module" CssClass="btn btn-primary" OnClick="AddModule_Click" />
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNewTitle" ErrorMessage="Title is required." ForeColor="Red" Display="Dynamic" />
                     <asp:Label ID="lblAddStatus" runat="server" Visible="false" CssClass="inline-feedback success" style="display:block; margin-top:8px;"></asp:Label>
                 </div>
             </details>

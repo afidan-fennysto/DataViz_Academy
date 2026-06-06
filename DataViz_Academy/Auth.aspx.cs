@@ -16,7 +16,7 @@ namespace DataViz_Academy
         {
             if (IsPostBack)
             {
-                Response.Write("POSTBACK REACHED C#");
+                
             }
 
             if (!IsPostBack && Session["Role"] != null)

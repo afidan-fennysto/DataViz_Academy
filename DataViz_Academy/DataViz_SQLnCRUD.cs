@@ -155,7 +155,7 @@ public class DatabaseHandler
         }
     }
 
-    // FLOW 3: PORTFOLIO / VISUALIZATION CRUD
+    // FLOW 3: PORTFOLIO / VISUALIZATION CRUD, not implemented
 
     /*public bool Member_CreateVisualization(int userId, string title, string toolUse, string imageUrl)
     {
@@ -232,7 +232,10 @@ public class DatabaseHandler
         return dt;
     }*/
 
-    // COMMUNITY FORUM FLOW (Create & Read operations)
+
+
+
+    // Additional COMMUNITY FORUM FLOW (Create & Read operations)
 
     // Allows Members to post a new question or topic
     /*public bool CreateForumPost(int userId, string topic, string content)
@@ -268,6 +271,7 @@ public class DatabaseHandler
         }
         return dt;
     }*/
+
 
     // Fetch user detail row cleanly based on their unique tracking identifier
     public DataTable GetUserProfile(string email)
@@ -355,7 +359,7 @@ public class DatabaseHandler
         return true;
     }
 
-    // Call this to display all earned badges on the Member Profile Page!
+    // User Badges is unimplemented
     public DataTable GetUserBadges(int userId)
     {
         DataTable dt = new DataTable();
@@ -379,7 +383,7 @@ public class DatabaseHandler
         return dt;
     }
 
-    // Update primary profile texts inside the relational dataset
+    // Update user profile to DB
     public bool UpdateUserProfile(string oldEmail, string newName, string newEmail)
     {
         using (SqlConnection conn = GetConnection())
@@ -395,7 +399,7 @@ public class DatabaseHandler
         }
     }
 
-    // Wipe tracking markers to reset system flow fields back to layout baselines
+    // Wipe off everything in the user's DB to default. 
     public void ResetProfileData(string email)
     {
         using (SqlConnection conn = GetConnection())
@@ -407,12 +411,12 @@ public class DatabaseHandler
                 cmd.ExecuteNonQuery();
             }
 
-            //string query2 = "DELETE FROM UserBadges WHERE StudentEmail = @Email";
-            //using (SqlCommand cmd = new SqlCommand(query2, conn))
-            //{
-            //cmd.Parameters.AddWithValue("@Email", email);
-            //cmd.ExecuteNonQuery();
-            //}
+            /* The user badges is not implemented, not really necessary for requirement
+            string query2 = "DELETE FROM UserBadges WHERE StudentEmail = @Email";
+            using (SqlCommand cmd = new SqlCommand(query2, conn)) {
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.ExecuteNonQuery();
+            }*/
         }
     }
 
