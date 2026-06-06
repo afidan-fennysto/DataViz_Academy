@@ -162,9 +162,9 @@
 
         function hideCreatePostModal() {
             document.getElementById('createPostModal').classList.remove('active');
-            document.getElementById('modalTitleInput').value = '';
-            document.getElementById('modalContentInput').value = '';
-            document.getElementById('modalImageInput').value = '';
+            document.getElementById('txtModalTitle').value = '';
+            document.getElementById('txtModalContent').value = '';
+            document.getElementById('fileModalImage').value = '';
         }
 
         function handleUiVote(buttonElement, direction) {

@@ -28,6 +28,26 @@ namespace DataViz_Academy
             }
         }
 
+        protected void AddModule_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNewTitle.Text)) return;
+
+            bool success = db.Admin_CreateModule(
+                txtNewTitle.Text.Trim(),
+                txtNewDesc.Text.Trim(),
+                txtNewCategory.Text.Trim(),
+                txtNewUrl.Text.Trim()
+            );
+
+            if (success)
+            {
+                lblAddStatus.Text = "Module added successfully!";
+                lblAddStatus.Visible = true;
+                txtNewTitle.Text = txtNewDesc.Text = txtNewCategory.Text = txtNewUrl.Text = "";
+                LoadCoursesDirectory();
+            }
+        }
+
         private void LoadCoursesDirectory()
         {
             try
@@ -50,6 +70,27 @@ namespace DataViz_Academy
             {
                 // Staging fallback display box to gracefully capture connectivity errors
                 Response.Write($"<script>alert('Data connection error trace: {ex.Message}');</script>");
+            }
+        }
+
+        protected void UpdateModule_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtUpdateId.Text)) return;
+
+            int moduleId = Convert.ToInt32(txtUpdateId.Text.Trim());
+            bool success = db.Admin_UpdateModule(
+                moduleId,
+                txtUpdateTitle.Text.Trim(),
+                txtUpdateDesc.Text.Trim(),
+                txtUpdateCategory.Text.Trim(),
+                txtUpdateUrl.Text.Trim()
+            );
+
+            if (success)
+            {
+                lblUpdateStatus.Text = "Module updated successfully!";
+                lblUpdateStatus.Visible = true;
+                LoadCoursesDirectory();
             }
         }
 
@@ -79,11 +120,11 @@ namespace DataViz_Academy
             }
         }
 
-        protected void InitiateCourseWizard_Click(object sender, EventArgs e)
+        /*protected void InitiateCourseWizard_Click(object sender, EventArgs e)
         {
             // Leverages ClientScript to pop open the design CSS wizard layout smoothly on postback
             string popupModalScript = "var modal = document.getElementById('courseWizardModal'); if(modal) { modal.style.display = 'flex'; }";
             ClientScript.RegisterStartupScript(this.GetType(), "LaunchWizardModal", popupModalScript, true);
-        }
+        }*/
     }
 }

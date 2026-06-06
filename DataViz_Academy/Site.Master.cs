@@ -60,7 +60,7 @@ namespace DataViz_Academy
             string contentText = txtForumContent.Text.Trim();
 
             // Forum not implemented yet
-            bool isSaved = db.CreateForumPost(currentUserId, topicText, contentText);
+            /*bool isSaved = db.CreateForumPost(currentUserId, topicText, contentText);
 
             if (isSaved)
             {
@@ -74,7 +74,7 @@ namespace DataViz_Academy
             else
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Failed to register transaction database sync.');", true);
-            }
+            }*/
         }
 
         //Logout

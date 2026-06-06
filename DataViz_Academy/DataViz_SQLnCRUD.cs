@@ -120,6 +120,28 @@ public class DatabaseHandler
         return false;
     }
 
+    public bool Admin_UpdateModule(int moduleId, string title, string description, string category, string contentUrl)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = @"UPDATE Module SET 
+                        Title = @Title, 
+                        Description = @Description, 
+                        Category = @Category, 
+                        ContentURL = @ContentURL 
+                        WHERE ModuleID = @ModuleID";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@ModuleID", moduleId);
+                cmd.Parameters.AddWithValue("@Title", title);
+                cmd.Parameters.AddWithValue("@Description", (object)description ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Category", category);
+                cmd.Parameters.AddWithValue("@ContentURL", (object)contentUrl ?? DBNull.Value);
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+    }
+
     public bool Admin_DeleteModule(int moduleId)
     {
         using (SqlConnection conn = GetConnection())

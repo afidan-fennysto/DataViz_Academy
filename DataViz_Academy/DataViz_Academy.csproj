@@ -77,6 +77,7 @@
     <Content Include="App_Data\SQLTable.sql" />
     <Content Include="Assets\Afi.png" />
     <Content Include="Assets\Alep.jpeg" />
+    <Content Include="Assets\Raif.jpeg" />
     <Content Include="Assets\Zetty.jpeg" />
     <Content Include="Profile_Pages\AfiProfile.aspx" />
     <Content Include="Profile_Pages\AleeyaProfile.aspx" />

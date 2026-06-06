@@ -337,7 +337,7 @@
 
         <header id="about">
             <div class="avatar-placeholder" style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                <asp:Image ID="imgDeveloper" runat="server" ImageUrl="~/Assets/Afi.png" AlternateText="Developer Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                <asp:Image ID="imgDeveloper" runat="server" ImageUrl="~/Assets/Raif.jpeg" AlternateText="Developer Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
             </div>
             <h1>Raif Izudin Bin Rasulluddin</h1>
             <p>Computer Science Student | Future Data Analyst</p>
