@@ -44,6 +44,7 @@ namespace DataViz_Academy
             }
         }
 
+        //This is for forum
         protected void BtnSubmitPost_Click(object sender, EventArgs e)
         {
             // Security verification: verify the user session exists before processing data
@@ -58,7 +59,7 @@ namespace DataViz_Academy
             string topicText = txtForumTopic.Text.Trim();
             string contentText = txtForumContent.Text.Trim();
 
-            // CALL THE HANDLER FUNCTION: Inserts record cleanly into ForumPost database table
+            // Forum not implemented yet
             bool isSaved = db.CreateForumPost(currentUserId, topicText, contentText);
 
             if (isSaved)
@@ -76,9 +77,10 @@ namespace DataViz_Academy
             }
         }
 
+        //Logout
         protected void LnkLogout_Click(object sender, EventArgs e)
         {
-            // Abandon the current runtime state, clear session attributes, and return to auth gateway
+            // Abandon the current runtime state, clear session attributes, and return to auth gateway. Similar to close and dispose
             Session.Clear();
             Session.Abandon();
             Response.Redirect("Auth.aspx");

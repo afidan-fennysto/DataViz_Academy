@@ -33,7 +33,7 @@
         <asp:Panel ID="pnlFocusArea" runat="server" style="margin-top: 2rem; border-top: 1px solid #edf2f7; padding-top: 1.5rem;">
             <h3 style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px; color: #1a202c; margin-bottom: 8px;">Assignment Focus Area</h3>
             <p style="color: #4a5568; font-size: 1rem; text-align: justify; line-height: 1.7; margin:0;">
-                <asp:Label ID="lblFocusAreaText" runat="server" Text="Spearheads the end-to-end relational database implementation, query indexing, and application logical flows. Authors the foundational system CRUD controllers utilizing parameterized ADO.NET pipelines to prevent SQL injection vulnerabilities. Designs and structures dynamic interface engines—such as the community forum list view matrices and user badge collection grids—by binding live SQL data adapters directly to native server web controls." />
+                <asp:Label ID="lblFocusAreaText" runat="server" Text="Spearheads the end-to-end relational database implementation, query indexing, and application logical flows. Authors the foundational system CRUD controllers utilizing parameterized ADO.NET pipelines to prevent SQL injection vulnerabilities. Designs and structures dynamic interface engines such as the community forum list view matrices and user badge collection grids by binding live SQL data adapters directly to native server web controls." />
             </p>
         </asp:Panel>
 

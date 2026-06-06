@@ -28,12 +28,12 @@ const AppState = {
     activeCourseId: null,
     courseProgress: { bar: 0, scatter: 0, powerbi: 0, tableau: 0 },
 
-    studentDatabaseRecords: [
+    /*studentDatabaseRecords: [
         { name: "Alif", email: "tp068421@mail.apu.edu.my", activeInteractions: "Scatterplots, Power BI Matrix", passedItems: 4 },
         { name: "Aleeya", email: "tp071239@mail.apu.edu.my", activeInteractions: "Bar Graphs, Advanced Tableau Workbook", passedItems: 3 },
         { name: "Afi", email: "tp069554@mail.apu.edu.my", activeInteractions: "Power BI Data Engineering Architecture", passedItems: 2 },
         { name: "Guest Student Alpha", email: "guest-alpha@mail.apu.edu.my", activeInteractions: "Bar Graphs Operational Scale", passedItems: 1 }
-    ]
+    ]*/
 };
 
 const CourseRepositoryData = {
