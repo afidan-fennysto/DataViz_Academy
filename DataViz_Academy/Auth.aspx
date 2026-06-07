@@ -54,7 +54,7 @@
                     <span id="regPassError" class="validation-warning" style="display:none;">Password string parameters do not fulfill syntax rule criteria.</span>
                 </div>
                 
-                <asp:Button ID="regSubmitBtn" runat="server" Text="Commit Record" OnClick="BtnSubmit_Click" CssClass="btn btn-primary" style="width: 100%;" />
+                <asp:Button ID="regSubmitBtn" runat="server" Text="Register" OnClick="BtnSubmit_Click" CssClass="btn btn-primary" style="width: 100%;" />
 
                 <p style="margin-top:16px; text-align:center; font-size: 0.9rem;"><a onclick="toggleAuthForms(false)" style="color: var(--primary-accent); cursor:pointer;">Back to Portal Login</a></p>
             </div>
