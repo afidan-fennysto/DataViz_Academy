@@ -12,39 +12,21 @@ namespace DataViz_Academy
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            // Always enforce panel visibility on every load including postbacks
+            if (Session["Role"] != null && Session["Role"].ToString().ToLower() == "admin")
             {
-                if (Session["Role"] != null && Session["Role"].ToString().ToLower() == "admin")
+                pnlAdminGateLocked.Visible = false;
+                pnlAdminGateUnlocked.Visible = true;
+
+                if (!IsPostBack)
                 {
-                    pnlAdminGateLocked.Visible = false;
-                    pnlAdminGateUnlocked.Visible = true;
                     LoadCoursesDirectory();
                 }
-                else
-                {
-                    pnlAdminGateLocked.Visible = true;
-                    pnlAdminGateUnlocked.Visible = false;
-                }
             }
-        }
-
-        protected void AddModule_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtNewTitle.Text)) return;
-
-            bool success = db.Admin_CreateModule(
-                txtNewTitle.Text.Trim(),
-                txtNewDesc.Text.Trim(),
-                txtNewCategory.Text.Trim(),
-                txtNewUrl.Text.Trim()
-            );
-
-            if (success)
+            else
             {
-                lblAddStatus.Text = "Module added successfully!";
-                lblAddStatus.Visible = true;
-                txtNewTitle.Text = txtNewDesc.Text = txtNewCategory.Text = txtNewUrl.Text = "";
-                LoadCoursesDirectory();
+                pnlAdminGateLocked.Visible = true;
+                pnlAdminGateUnlocked.Visible = false;
             }
         }
 
@@ -73,11 +55,45 @@ namespace DataViz_Academy
             }
         }
 
+        protected void AddModule_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNewTitle.Text)) return;
+
+            bool success = db.Admin_CreateModule(
+                txtNewTitle.Text.Trim(),
+                txtNewDesc.Text.Trim(),
+                txtNewCategory.Text.Trim(),
+                txtNewUrl.Text.Trim()
+            );
+
+            if (success)
+            {
+                pnlAdminGateLocked.Visible = false;
+                pnlAdminGateUnlocked.Visible = true;
+
+                lblAddStatus.Text = "Module added successfully!";
+                lblAddStatus.Visible = true;
+                txtNewTitle.Text = txtNewDesc.Text = txtNewCategory.Text = txtNewUrl.Text = "";
+                LoadCoursesDirectory();
+            }
+        }
+
+
+
         protected void UpdateModule_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUpdateId.Text)) return;
+            if (string.IsNullOrWhiteSpace(txtUpdateId.Text))
+            {
+                lblUpdateStatus.Text = "DEBUG: txtUpdateId is empty!";
+                lblUpdateStatus.Visible = true;
+                return;
+            }
 
             int moduleId = Convert.ToInt32(txtUpdateId.Text.Trim());
+
+            lblUpdateStatus.Text = $"DEBUG: Trying to update ModuleID={moduleId}, Title={txtUpdateTitle.Text}";
+            lblUpdateStatus.Visible = true;
+
             bool success = db.Admin_UpdateModule(
                 moduleId,
                 txtUpdateTitle.Text.Trim(),
@@ -86,11 +102,19 @@ namespace DataViz_Academy
                 txtUpdateUrl.Text.Trim()
             );
 
+            lblUpdateStatus.Text = $"DEBUG: success={success}, ModuleID={moduleId}";
+            lblUpdateStatus.Visible = true;
+
             if (success)
             {
+                pnlAdminGateLocked.Visible = false;
+                pnlAdminGateUnlocked.Visible = true;
                 lblUpdateStatus.Text = "Module updated successfully!";
-                lblUpdateStatus.Visible = true;
                 LoadCoursesDirectory();
+            }
+            else
+            {
+                lblUpdateStatus.Text = "Module failed to update! Check if Module ID exists.";
             }
         }
 
@@ -106,7 +130,9 @@ namespace DataViz_Academy
 
                 if (isDeleted)
                 {
-                    // Clean re-bind execution loop to render changes instantly
+                    pnlAdminGateLocked.Visible = false;
+                    pnlAdminGateUnlocked.Visible = true;
+
                     LoadCoursesDirectory();
                 }
                 else

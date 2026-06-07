@@ -64,7 +64,9 @@ public class DatabaseHandler
         DataTable dt = new DataTable();
         using (SqlConnection conn = GetConnection())
         {
-            string query = "SELECT ModuleID, Title, Description, Category, ContentURL FROM Module";
+            string query = @"SELECT ROW_NUMBER() OVER(ORDER BY ModuleID) AS RowNum,
+                            ModuleID, Title, Description, Category, ContentURL
+                            FROM Module";
             using (SqlCommand cmd = new SqlCommand(query, conn))
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
@@ -78,10 +80,9 @@ public class DatabaseHandler
     {
         using (SqlConnection conn = GetConnection())
         {
-            // 1. We insert the Module and immediately ask SQL Server to return the new auto-generated ID (SCOPE_IDENTITY)
             string query = @"INSERT INTO Module (Title, Description, Category, ContentURL) 
-                         VALUES (@Title, @Description, @Category, @ContentURL);
-                         SELECT SCOPE_IDENTITY();"; // <--- Crucial command!
+                     VALUES (@Title, @Description, @Category, @ContentURL);
+                     SELECT SCOPE_IDENTITY();";
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
@@ -90,29 +91,25 @@ public class DatabaseHandler
                 cmd.Parameters.AddWithValue("@Category", category);
                 cmd.Parameters.AddWithValue("@ContentURL", contentUrl);
 
-                // ExecuteScalar reads the single value returned by SCOPE_IDENTITY()
                 object result = cmd.ExecuteScalar();
 
                 if (result != null)
                 {
-                    int newModuleId = Convert.ToInt32(result);
+                    //int newModuleId = Convert.ToInt32(result);
 
-                    // 2. Automate Badge Creation: Create a default badge tied to this new Module ID
-                    string badgeQuery = @"INSERT INTO Badge (BadgeName, Description, IconURL, ModuleID) 
-                                      VALUES (@BadgeName, @BadgeDesc, @IconURL, @ModuleID)";
+                    /* Only insert badge if one doesn't already exist for this module
+                    string badgeQuery = @"IF NOT EXISTS (SELECT 1 FROM Badge WHERE ModuleID = @ModuleID)
+                                    INSERT INTO Badge (BadgeName, Description, IconURL, ModuleID) 
+                                    VALUES (@BadgeName, @BadgeDesc, @IconURL, @ModuleID)";
 
                     using (SqlCommand badgeCmd = new SqlCommand(badgeQuery, conn))
                     {
-                        // Generates a clean default name like "Power BI Fundamentals Champion"
                         badgeCmd.Parameters.AddWithValue("@BadgeName", title + " Champion");
                         badgeCmd.Parameters.AddWithValue("@BadgeDesc", "Awarded for completing the " + title + " module.");
-
-                        // Assigns a generic placeholder image badge path until the admin edits it
                         badgeCmd.Parameters.AddWithValue("@IconURL", "~/Images/Badges/default_badge.png");
                         badgeCmd.Parameters.AddWithValue("@ModuleID", newModuleId);
-
                         badgeCmd.ExecuteNonQuery();
-                    }
+                    }*/
                     return true;
                 }
             }

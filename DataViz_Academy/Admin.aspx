@@ -38,8 +38,8 @@
                         <label>Content URL</label>
                         <asp:TextBox ID="txtNewUrl" runat="server" CssClass="form-control" placeholder="https://..."></asp:TextBox>
                     </div>
-                    <asp:Button ID="btnAddModule" runat="server" Text="Add Module" CssClass="btn btn-primary" OnClick="AddModule_Click" />
-                    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNewTitle" ErrorMessage="Title is required." ForeColor="Red" Display="Dynamic" />
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNewTitle" ErrorMessage="Title is required." ForeColor="Red" Display="Dynamic" ValidationGroup="AddGroup" />
+                    <asp:Button ID="btnAddModule" runat="server" Text="Add Module" CssClass="btn btn-primary" OnClick="AddModule_Click" ValidationGroup="AddGroup" />
                     <asp:Label ID="lblAddStatus" runat="server" Visible="false" CssClass="inline-feedback success" style="display:block; margin-top:8px;"></asp:Label>
                 </div>
             </details>
@@ -71,7 +71,7 @@
                         <label>New Content URL</label>
                         <asp:TextBox ID="txtUpdateUrl" runat="server" CssClass="form-control"></asp:TextBox>
                     </div>
-                    <asp:Button ID="btnUpdateModule" runat="server" Text="Update Module" CssClass="btn btn-primary" OnClick="UpdateModule_Click" />
+                    <asp:Button ID="btnUpdateModule" runat="server" Text="Update Module" CssClass="btn btn-primary" OnClick="UpdateModule_Click" CausesValidation="false" />
                     <asp:Label ID="lblUpdateStatus" runat="server" Visible="false" CssClass="inline-feedback success" style="display:block; margin-top:8px;"></asp:Label>
                 </div>
             </details>
@@ -82,10 +82,10 @@
                 <div class="admin-table-container">
                     <asp:GridView ID="gvAdminCourses" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None" Width="100%">
                         <Columns>
-                            <asp:BoundField DataField="ModuleID" HeaderText="Module ID" />
+                            <asp:BoundField DataField="ModuleID" HeaderText="Module ID"/>
                             <asp:BoundField DataField="Title" HeaderText="Title" />
-                            <asp:BoundField DataField="Description" HeaderText="Description" />
                             <asp:BoundField DataField="Category" HeaderText="Category" />
+                            <asp:BoundField DataField="Description" HeaderText="Description" />
                             <asp:BoundField DataField="ContentURL" HeaderText="Content URL" />
                             <asp:TemplateField HeaderText="Actions">
                                 <ItemTemplate>
