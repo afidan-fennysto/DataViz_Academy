@@ -1,5 +1,4 @@
-﻿-- 1. User Table (Authentication)
-CREATE TABLE [User] (
+﻿CREATE TABLE [User] (
     UserID INT IDENTITY(1,1) PRIMARY KEY,
     Username NVARCHAR(50) NOT NULL UNIQUE,
     Email NVARCHAR(100) NOT NULL,
@@ -56,4 +55,25 @@ CREATE TABLE ForumPost (
     Content NVARCHAR(MAX) NOT NULL,
     Timestamp DATETIME NOT NULL DEFAULT GETDATE(),
     FOREIGN KEY (UserID) REFERENCES [User](UserID)
+);
+
+-- 7. Badge Table (Lookup table for available rewards)
+CREATE TABLE Badge (
+    BadgeID INT IDENTITY(1,1) PRIMARY KEY,
+    BadgeName NVARCHAR(50) NOT NULL UNIQUE,
+    Description NVARCHAR(MAX) NULL,
+    IconURL NVARCHAR(2048) NOT NULL,
+    ModuleID INT NOT NULL UNIQUE, -- Links 1:1 to a specific module completion requirement
+    FOREIGN KEY (ModuleID) REFERENCES Module(ModuleID) ON DELETE CASCADE
+);
+
+-- 8. UserBadge Table (Bridge table handling the M:N relationship)
+CREATE TABLE UserBadge (
+    UserBadgeID INT IDENTITY(1,1) PRIMARY KEY,
+    UserID INT NOT NULL,
+    BadgeID INT NOT NULL,
+    DateEarned DATETIME NOT NULL DEFAULT GETDATE(),
+    FOREIGN KEY (UserID) REFERENCES [User](UserID) ON DELETE CASCADE,
+    FOREIGN KEY (BadgeID) REFERENCES Badge(BadgeID) ON DELETE CASCADE,
+    CONSTRAINT UC_User_Badge UNIQUE (UserID, BadgeID) -- Prevents duplicate badges for the same user
 );

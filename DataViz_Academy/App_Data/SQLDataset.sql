@@ -1,8 +1,10 @@
-﻿-- 1. SEEDING USERS (Admin and Member Actors)
-INSERT INTO [User] (Username, Email, PasswordHash, Role) VALUES 
-('admin1', 'admin@gmail.com', 'hashed_admin_pass_123', 'Admin'),
-('alif', 'alif@gmail.com', 'hashed_member_pass_456', 'Member'),
-('raif', 'raif@gmail.com', 'hashed_member_pass_789', 'Member');
+﻿INSERT INTO [User] (Username, Email, PasswordHash, Role) VALUES 
+--admin2
+--afi123
+ --zetty123
+('admin2', 'admin2@apu.edu.my', '1c142b2601f28fed0fd49b6ded47ca73644f199017ae1cfafb152d1d07c06c59', 'Admin'),
+('afi', 'afi@mail.apu.edu.my', '61159954a20b0804473cb109033379203673c683b544d6735db9d6d5eb7f7b24', 'Member'),
+('zetty', 'zetty@mail.apu.edu.my', '6f38efcd8b725c8148b5ffb0f59063548edb4b6ba3e4c4493397945d8b80b7b1', 'Member');
 
 -- 2. SEEDING LEARNING MODULES
 INSERT INTO Module (Title, Description, Category, ContentURL) VALUES 
@@ -29,3 +31,9 @@ INSERT INTO Visualization (UserID, Title, ToolUse, ImageURL, Modified) VALUES
 INSERT INTO ForumPost (UserID, Topic, Content, Timestamp) VALUES 
 (2, 'Stuck on SAS Viya Data Preprocessing', 'How do I optimize data cleaning pipelines in SAS Viya before training a predictive model?', GETDATE()),
 (1, 'Welcome to DataViz Academy Forum!', 'Please use this asynchronous space to discuss course material and share your visualization portfolios.', GETDATE());
+
+-- Associates specific badges automatically to your 3 seeded modules
+INSERT INTO Badge (BadgeName, Description, IconURL, ModuleID) VALUES 
+('Power BI Pioneer', 'Awarded for completing the Power BI Fundamentals track.', '~/Images/Badges/pbi_champion.png', 1),
+('Python Snake Charmer', 'Awarded for mastering complex Python scripts and visualization.', '~/Images/Badges/python_expert.png', 2),
+('Tableau Storyteller', 'Awarded for completing advanced Tableau structural workflows.', '~/Images/Badges/tableau_master.png', 3);

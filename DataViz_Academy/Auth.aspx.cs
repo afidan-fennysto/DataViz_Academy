@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-
 using System.Data;
-using System.Data.SqlClient;
-using System.Configuration;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -16,84 +9,21 @@ namespace DataViz_Academy
 {
     public partial class Login : System.Web.UI.Page
     {
+
+        public DatabaseHandler db = new DatabaseHandler();
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Optional check: If user is already logged in, skip auth screen
+            if (IsPostBack)
+            {
+                
+            }
+
             if (!IsPostBack && Session["Role"] != null)
             {
                 Response.Redirect("Profile.aspx");
             }
         }
-
-        protected void lnkGoToRegister_Click(object sender, EventArgs e)
-        {
-            AuthMultiView.ActiveViewIndex = 1; // Shifts focus strictly to the Register view container
-        }
-
-        protected void lnkGoToLogin_Click(object sender, EventArgs e)
-        {
-            AuthMultiView.ActiveViewIndex = 0; // Shifts focus strictly back to the Login view container
-        }
-
-        protected void btnLogin_Click(object sender, EventArgs e)
-        {
-            string username = txtLoginUsername.Text.Trim();
-            string password = txtLoginPassword.Text.Trim();
-
-            string connstr = ConfigurationManager.ConnectionStrings["DataViz"].ConnectionString;
-
-            string query = "SELECT Username, Email, PasswordHash, Role FROM [User] WHERE email = @input OR username = @input";
-
-            using (SqlConnection conn = new SqlConnection(connstr))
-            {
-                using (SqlCommand comm = new SqlCommand(query, conn))
-                {
-                    try
-                    {
-                        conn.Open();
-                        comm.Parameters.AddWithValue("@input", username);
-                        comm.Parameters.AddWithValue("@password", password);
-
-                        //int count = (int)comm.ExecuteScalar();
-
-                        SqlDataReader reader = comm.ExecuteReader();
-                        if (reader.Read())
-                        {
-                            string storedHash = reader["PasswordHash"].ToString();
-                            string userRole = reader["Role"].ToString();
-
-                            if (VerifyPassword(password, storedHash))
-                            {
-                                Response.Write("Login Successful for Email " + reader["Email"].ToString());
-
-                                Session["Email"] = reader["Email"].ToString();
-                                Session["Role"] = userRole;
-
-                                Response.Redirect("Profile.aspx");
-                            }
-                            else { Response.Write("Login Failed"); }
-
-                        }
-                        else { Response.Write("Account not registered under that username"); }
-
-                        conn.Close();
-                        conn.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Safely print system exceptions for local debugging logs
-                        Response.Write("Database connection exception encountered: " + ex.Message);
-                    }
-                }
-            }
-
-        }
-
-        protected void btnRegister_Click(object sender, EventArgs e)
-        {
-            // Insert your registration SQL queries here.
-        }
-
         private string ComputeHash(string rawHash)
         {
             using (SHA256 sha256Hash = SHA256.Create())
@@ -108,11 +38,81 @@ namespace DataViz_Academy
             }
         }
 
-        private bool VerifyPassword(string inputPassword, string storedHash)
+        protected void BtnLogin_Click(object sender, EventArgs e)
         {
-            string computedInputHash = ComputeHash(inputPassword);
-            return string.Equals(computedInputHash, storedHash, StringComparison.OrdinalIgnoreCase);
+            // Capture inputs from the .aspx server controls
+            string username = loginName.Text.Trim();
+            string email = loginEmail.Text.Trim();
+            string password = loginPass.Text.Trim();
+
+            // Hash the user input password before sending it to the database query
+            string hashedPassword = ComputeHash(password);
+
+            // Call your friend's class. It runs the query safely and returns the data wrapped in a table
+            DataTable userTable = db.LoginUser(username, email, hashedPassword);
+
+            // HERE IS THE "LOGIN PROGRESS": Check if the database found a matching record row
+            if (userTable != null && userTable.Rows.Count > 0)
+            {
+                DataRow userRow = userTable.Rows[0];
+
+                Session["UserID"] = Convert.ToInt32(userRow["UserID"]);
+                Session["Username"] = userRow["Username"].ToString();
+                Session["Email"] = userRow["Email"].ToString();
+                Session["Role"] = userRow["Role"].ToString();
+
+                // Direct the authenticated user out of the gateway into their profile dashboard
+                Response.Redirect("~/Profile.aspx");
+            }
+            else
+            {
+                lblLoginError.Text = "Login Failed: Invalid credentials or profile handles do not match.";
+                lblLoginError.Visible = true;
+
+            }
+
+        }
+
+        protected void BtnSubmit_Click(object sender, EventArgs e)
+        {
+            string username = regName.Text.Trim();
+            string email = regEmail.Text.Trim();
+            string password = regPass.Text.Trim();
+
+            // Validate APU email domain
+            if (!email.EndsWith("@apu.edu.my") && !email.EndsWith("@mail.apu.edu.my"))
+            {
+                lblLoginError.Text = "Registration Failed: Must use an APU email address.";
+                lblLoginError.Visible = true;
+                return;
+            }
+
+            // Validate password: min 6 chars, 1 uppercase, 1 digit
+            if (password.Length < 6 || !password.Any(char.IsUpper) || !password.Any(char.IsDigit))
+            {
+                lblLoginError.Text = "Registration Failed: Password must be ≥6 chars, include 1 uppercase and 1 number.";
+                lblLoginError.Visible = true;
+                return;
+            }
+
+            string hashedPassword = ComputeHash(password);
+            bool success = db.RegisterUser(username, email, hashedPassword, "Member");
+
+            if (success)
+            {
+                // Auto-login after registration
+                Session["Username"] = username;
+                Session["Email"] = email;
+                Session["Role"] = "Member";
+                Response.Redirect("~/Profile.aspx");
+            }
+            else
+            {
+                lblLoginError.Text = "Registration Failed: Email may already be registered.";
+                lblLoginError.Visible = true;
+            }
         }
 
     }
+     
 }

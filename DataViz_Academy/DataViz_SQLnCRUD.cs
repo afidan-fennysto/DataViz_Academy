@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 public class DatabaseHandler
 {
     // Using |DataDirectory| makes the project portable across different computers
-    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|dataviz_database.mdf;Integrated Security=True;";
+    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\DataVizBase.mdf;Integrated Security=True;";
 
     // Helper method to get an open connection safely
     private SqlConnection GetConnection()
@@ -38,15 +38,16 @@ public class DatabaseHandler
         }
     }
 
-    public DataTable LoginUser(string username, string passwordHash)
+    public DataTable LoginUser(string username, string email, string passwordHash)
     {
         DataTable dt = new DataTable();
         using (SqlConnection conn = GetConnection())
         {
-            string query = "SELECT UserID, Username, Role FROM [User] WHERE Username = @Username AND PasswordHash = @PasswordHash";
+            string query = "SELECT UserID, Username, Email, Role FROM [User] WHERE Username = @Username AND Email = @Email AND PasswordHash = @PasswordHash";
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@Username", username);
+                cmd.Parameters.AddWithValue("@Email", email);
                 cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
                 using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {
@@ -63,7 +64,9 @@ public class DatabaseHandler
         DataTable dt = new DataTable();
         using (SqlConnection conn = GetConnection())
         {
-            string query = "SELECT ModuleID, Title, Description, Category, ContentURL FROM Module";
+            string query = @"SELECT ROW_NUMBER() OVER(ORDER BY ModuleID) AS RowNum,
+                            ModuleID, Title, Description, Category, ContentURL
+                            FROM Module";
             using (SqlCommand cmd = new SqlCommand(query, conn))
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
@@ -77,13 +80,60 @@ public class DatabaseHandler
     {
         using (SqlConnection conn = GetConnection())
         {
-            string query = "INSERT INTO Module (Title, Description, Category, ContentURL) VALUES (@Title, @Description, @Category, @ContentURL)";
+            string query = @"INSERT INTO Module (Title, Description, Category, ContentURL) 
+                     VALUES (@Title, @Description, @Category, @ContentURL);
+                     SELECT SCOPE_IDENTITY();";
+
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@Title", title);
                 cmd.Parameters.AddWithValue("@Description", (object)description ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Category", category);
                 cmd.Parameters.AddWithValue("@ContentURL", contentUrl);
+
+                object result = cmd.ExecuteScalar();
+
+                if (result != null)
+                {
+                    //int newModuleId = Convert.ToInt32(result);
+
+                    /* Only insert badge if one doesn't already exist for this module
+                    string badgeQuery = @"IF NOT EXISTS (SELECT 1 FROM Badge WHERE ModuleID = @ModuleID)
+                                    INSERT INTO Badge (BadgeName, Description, IconURL, ModuleID) 
+                                    VALUES (@BadgeName, @BadgeDesc, @IconURL, @ModuleID)";
+
+                    using (SqlCommand badgeCmd = new SqlCommand(badgeQuery, conn))
+                    {
+                        badgeCmd.Parameters.AddWithValue("@BadgeName", title + " Champion");
+                        badgeCmd.Parameters.AddWithValue("@BadgeDesc", "Awarded for completing the " + title + " module.");
+                        badgeCmd.Parameters.AddWithValue("@IconURL", "~/Images/Badges/default_badge.png");
+                        badgeCmd.Parameters.AddWithValue("@ModuleID", newModuleId);
+                        badgeCmd.ExecuteNonQuery();
+                    }*/
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool Admin_UpdateModule(int moduleId, string title, string description, string category, string contentUrl)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = @"UPDATE Module SET 
+                        Title = @Title, 
+                        Description = @Description, 
+                        Category = @Category, 
+                        ContentURL = @ContentURL 
+                        WHERE ModuleID = @ModuleID";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@ModuleID", moduleId);
+                cmd.Parameters.AddWithValue("@Title", title);
+                cmd.Parameters.AddWithValue("@Description", (object)description ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Category", category);
+                cmd.Parameters.AddWithValue("@ContentURL", (object)contentUrl ?? DBNull.Value);
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
@@ -102,31 +152,9 @@ public class DatabaseHandler
         }
     }
 
-    // Updates student quiz scores and dashboard tracking data
-    public bool UpdateUserProgress(int userId, int moduleId, decimal score, string status, int percentage)
-    {
-        using (SqlConnection conn = GetConnection())
-        {
-            string query = @"IF EXISTS (SELECT 1 FROM UserProgress WHERE UserID = @UserID AND ModuleID = @ModuleID)
-                                UPDATE UserProgress SET Score = @Score, CompletionStatus = @Status, ProgressionPercentage = @Percentage WHERE UserID = @UserID AND ModuleID = @ModuleID
-                             ELSE
-                                INSERT INTO UserProgress (UserID, ModuleID, Score, CompletionStatus, ProgressionPercentage) VALUES (@UserID, @ModuleID, @Score, @Status, @Percentage)";
+    // FLOW 3: PORTFOLIO / VISUALIZATION CRUD, not implemented
 
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@UserID", userId);
-                cmd.Parameters.AddWithValue("@ModuleID", moduleId);
-                cmd.Parameters.AddWithValue("@Score", score);
-                cmd.Parameters.AddWithValue("@Status", status);
-                cmd.Parameters.AddWithValue("@Percentage", percentage);
-                return cmd.ExecuteNonQuery() > 0;
-            }
-        }
-    }
-
-    // FLOW 3: PORTFOLIO / VISUALIZATION CRUD
-
-    public bool Member_CreateVisualization(int userId, string title, string toolUse, string imageUrl)
+    /*public bool Member_CreateVisualization(int userId, string title, string toolUse, string imageUrl)
     {
         using (SqlConnection conn = GetConnection())
         {
@@ -199,12 +227,15 @@ public class DatabaseHandler
             }
         }
         return dt;
-    }
+    }*/
 
-    // COMMUNITY FORUM FLOW (Create & Read operations)
+
+
+
+    // Additional COMMUNITY FORUM FLOW (Create & Read operations)
 
     // Allows Members to post a new question or topic
-    public bool CreateForumPost(int userId, string topic, string content)
+    /*public bool CreateForumPost(int userId, string topic, string content)
     {
         using (SqlConnection conn = GetConnection())
         {
@@ -236,5 +267,155 @@ public class DatabaseHandler
             }
         }
         return dt;
+    }*/
+
+
+    // Fetch user detail row cleanly based on their unique tracking identifier
+    public DataTable GetUserProfile(string email)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = GetConnection()) // Uses your safe open method
+        {
+            // Adjust column names (Username, Email, AccentColor) if your [User] schema varies slightly
+            string query = "SELECT Username, Email FROM [user] WHERE Email = @Email";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+        }
+        return dt;
     }
+
+    // Fetch all collected badges mapped directly to this student account
+    /*public DataTable GetUserBadges(string email)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = "SELECT BadgeName, ColorAccent FROM UserBadges WHERE StudentEmail = @Email";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+        }
+        return dt;
+    }*/
+
+    // Updates student quiz scores and awards badges dynamically upon module completion
+    public bool UpdateUserProgress(int userId, int moduleId, decimal score, string status, int percentage)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            // 1. Update or Insert the progression log record
+            string progressQuery = @"IF EXISTS (SELECT 1 FROM UserProgress WHERE UserID = @UserID AND ModuleID = @ModuleID)
+                                    UPDATE UserProgress SET Score = @Score, CompletionStatus = @Status, ProgressionPercentage = @Percentage WHERE UserID = @UserID AND ModuleID = @ModuleID
+                                 ELSE
+                                    INSERT INTO UserProgress (UserID, ModuleID, Score, CompletionStatus, ProgressionPercentage) VALUES (@UserID, @ModuleID, @Score, @Status, @Percentage);";
+
+            using (SqlCommand cmd = new SqlCommand(progressQuery, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                cmd.Parameters.AddWithValue("@ModuleID", moduleId);
+                cmd.Parameters.AddWithValue("@Score", score);
+                cmd.Parameters.AddWithValue("@Status", status);
+                cmd.Parameters.AddWithValue("@Percentage", percentage);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            // 2. AUTOMATIC BADGE CHECK: If the module is finished, award the badge immediately!
+            if (status.Equals("Completed", StringComparison.OrdinalIgnoreCase))
+            {
+                // This query inserts a badge record only if the user hasn't already earned it
+                string badgeQuery = @"INSERT INTO UserBadge (UserID, BadgeID)
+                                  SELECT @UserID, BadgeID 
+                                  FROM Badge 
+                                  WHERE ModuleID = @ModuleID
+                                  AND NOT EXISTS (
+                                      SELECT 1 FROM UserBadge ub 
+                                      JOIN Badge b ON ub.BadgeID = b.BadgeID 
+                                      WHERE ub.UserID = @UserID AND b.ModuleID = @ModuleID
+                                  );";
+
+                using (SqlCommand badgeCmd = new SqlCommand(badgeQuery, conn))
+                {
+                    badgeCmd.Parameters.AddWithValue("@UserID", userId);
+                    badgeCmd.Parameters.AddWithValue("@ModuleID", moduleId);
+                    badgeCmd.ExecuteNonQuery(); // Executes quietly in the background
+                }
+            }
+        }
+        return true;
+    }
+
+    // User Badges is unimplemented
+    public DataTable GetUserBadges(int userId)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = @"SELECT b.BadgeName, b.Description, b.IconURL, ub.DateEarned 
+                        FROM UserBadge ub
+                        JOIN Badge b ON ub.BadgeID = b.BadgeID
+                        WHERE ub.UserID = @UserID
+                        ORDER BY ub.DateEarned DESC";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+        }
+        return dt;
+    }
+
+    // Update user profile to DB
+    public bool UpdateUserProfile(string oldEmail, string newName, string newEmail)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            string query = "UPDATE [User] SET Username = @Username, Email = @NewEmail WHERE Email = @OldEmail";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Username", newName);
+                cmd.Parameters.AddWithValue("@NewEmail", newEmail);
+                cmd.Parameters.AddWithValue("@OldEmail", oldEmail);
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+    }
+
+    // Wipe off everything in the user's DB to default. 
+    public void ResetProfileData(string email)
+    {
+        using (SqlConnection conn = GetConnection())
+        {
+            string query1 = "UPDATE [User] SET Username = '' WHERE Email = @Email";
+            using (SqlCommand cmd = new SqlCommand(query1, conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.ExecuteNonQuery();
+            }
+
+            /* The user badges is not implemented, not really necessary for requirement
+            string query2 = "DELETE FROM UserBadges WHERE StudentEmail = @Email";
+            using (SqlCommand cmd = new SqlCommand(query2, conn)) {
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.ExecuteNonQuery();
+            }*/
+        }
+    }
+
+
 }
